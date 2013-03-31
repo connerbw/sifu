@@ -1,0 +1,8 @@
+data/**/*
+temporary/**/*
+.htaccess
+config.php
+config.advanced.php
+.idea/
+
+!temporary/.htaccess

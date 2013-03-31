@@ -1,0 +1,54 @@
+<?php
+
+$gtext['address'] = 'Address';
+$gtext['ajax_error_1'] = 'A group with this name already exists.';
+$gtext['ajax_error_2'] = 'Group name is reserved.';
+$gtext['ajax_error_3'] = 'A user with this nickname already exists.';
+$gtext['ajax_error_4'] = 'A user with this email already exists.';
+$gtext['chgrp'] = 'Chgrp';
+$gtext['chmod'] = 'Chmod';
+$gtext['chmod_calculator'] = 'Chmod calculator';
+$gtext['chown'] = 'Chown';
+$gtext['country'] = 'Country';
+$gtext['dob'] = 'Birthday';
+$gtext['dump_marketing_table'] = 'List the marketing database';
+$gtext['email'] = 'Email';
+$gtext['execute'] = 'Execute';
+$gtext['family_name'] = 'Last name';
+$gtext['given_name'] = 'First name';
+$gtext['group'] = 'Group';
+$gtext['groups'] = 'Groups';
+$gtext['how_they_heard_about_us'] = 'How did you hear about our website?';
+$gtext['language'] = 'Language';
+$gtext['list_groups'] = 'List groups';
+$gtext['list_permissions'] = 'List permissions';
+$gtext['list_users'] = 'List users';
+$gtext['locality'] = 'City';
+$gtext['marketing'] = 'Marketing';
+$gtext['module'] = 'Module';
+$gtext['name'] = 'Name';
+$gtext['new_group'] = 'New group';
+$gtext['new_permissions'] = 'New permissions';
+$gtext['new_user'] = 'New user';
+$gtext['nickname'] = 'Nickname';
+$gtext['no_permissions'] = 'No permissions found.';
+$gtext['no_groups'] = 'No groups found.';
+$gtext['no_users'] = 'No users found.';
+$gtext['other'] = 'Other';
+$gtext['owner'] = 'Owner';
+$gtext['password'] = 'Password';
+$gtext['permissions'] = 'Permissions';
+$gtext['postcode'] = 'Zip / Postal code';
+$gtext['read'] = 'Read';
+$gtext['region'] = 'State / Province';
+$gtext['street_address'] = 'Address';
+$gtext['tel'] = 'Telephone';
+$gtext['tip_acl'] = "The ACL system is loosely inspired by Chmod. The convention is 'read' to view, 'write' to create or modify, and 'execute' as in 'the executioner' to delete.";
+$gtext['timezone'] = 'Timezone';
+$gtext['url'] = 'Url';
+$gtext['user'] = 'User';
+$gtext['users'] = 'Users';
+$gtext['verify_password'] = 'Verify password';
+$gtext['write'] = 'Write';
+
+?>

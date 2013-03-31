@@ -1,0 +1,54 @@
+<?php
+
+$gtext['address'] = 'Adresse';
+$gtext['ajax_error_1'] = 'Un groupe avec ce nom existe déjà.';
+$gtext['ajax_error_2'] = 'Nom du groupe est réservé.';
+$gtext['ajax_error_3'] = 'Un utilisateur avec ce surnom existe déjà.';
+$gtext['ajax_error_4'] = 'Un utilisateur avec ce courriel existe déjà.';
+$gtext['chgrp'] = 'Chgrp';
+$gtext['chmod'] = 'Chmod';
+$gtext['chmod_calculator'] = 'Calculatrice chmod';
+$gtext['chown'] = 'Chown';
+$gtext['country'] = 'Pays';
+$gtext['dob'] = 'Date de naissance';
+$gtext['dump_marketing_table'] = 'Lister la BD marketing';
+$gtext['email'] = 'Courriel';
+$gtext['execute'] = 'Exécution';
+$gtext['family_name'] = 'Nom';
+$gtext['given_name'] = 'Prénom';
+$gtext['group'] = 'Groupe';
+$gtext['groups'] = 'Groupes';
+$gtext['how_they_heard_about_us'] = 'Comment avez-vous entendu parler de notre site web?';
+$gtext['language'] = 'Langue';
+$gtext['list_groups'] = 'Liste des groupes';
+$gtext['list_permissions'] = 'Liste des permissions';
+$gtext['list_users'] = 'Liste des utilisateurs';
+$gtext['locality'] = 'Ville';
+$gtext['marketing'] = 'Marketing';
+$gtext['module'] = 'Module';
+$gtext['name'] = 'Nom';
+$gtext['new_group'] = 'Nouveau groupe';
+$gtext['new_permissions'] = 'Nouvelle permissions';
+$gtext['new_user'] = 'Nouvel utilisateur';
+$gtext['nickname'] = 'Nom d\'utilisateur';
+$gtext['no_permissions'] = 'Aucune permission trouvé.';
+$gtext['no_groups'] = 'Aucun groupe trouvé.';
+$gtext['no_users'] = 'Aucun utilisateur trouvé.';
+$gtext['other'] = 'Autres';
+$gtext['owner'] = 'Propriétaire';
+$gtext['password'] = 'Mot de passe';
+$gtext['permissions'] = 'Permissions';
+$gtext['postcode'] = 'Zip / Code postal';
+$gtext['read'] = 'Lecture';
+$gtext['region'] = 'Etat / Province';
+$gtext['street_address'] = 'Adresse';
+$gtext['tel'] = 'Téléphone';
+$gtext['tip_acl'] = "Le système d'ACL est vaguement inspiré de Chmod. La convention est 'lecture' pour lire ou imprimer, 'écriture' pour créer ou modifier, et 'exécution' tel 'le bourreau' pour supprimer.";
+$gtext['timezone'] = 'Fuseau horaire';
+$gtext['url'] = 'Url';
+$gtext['user'] = 'Utilisateur';
+$gtext['users'] = 'Utilisateurs';
+$gtext['verify_password']  = 'Vérifiez le mot de passe';
+$gtext['write'] = 'Écriture';
+
+?>

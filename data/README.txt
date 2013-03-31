@@ -1,0 +1,1 @@
+User generated content, such as avatars or uploaded PDF files, go in data/ directory.
