@@ -5,7 +5,7 @@
 $gtext['navcontainer'] = array(
     'Home' => SifuFunct::makeUrl('/home'),
     // '__get_module_menu__::home' => null,
-    'Sourcecode' => 'http://sourceforge.net/projects/sifu/',
+    'Sourcecode' => 'https://github.com/connerbw/sifu/',
     );
 
 /*
@@ -28,7 +28,7 @@ $gtext['navcontainer'] = array(
 *         ),
 *
 *     // Can also accept string as second argument
-*     'Sourcecode' => 'http://sourceforge.net/projects/sifu/',
+*     'Sourcecode' => 'https://github.com/connerbw/sifu/',
 *
 *     );
 */
