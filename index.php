@@ -101,6 +101,10 @@ catch (Exception $e) {
     }
 
     try {
+        if (function_exists('sifu')) {
+            throw new Exception();
+        }
+
         $controller = 'globals';
         if (is_file($GLOBALS['CONFIG']['PATH'] . '/biz/modules/globals/controller.php')) {
             include_once($GLOBALS['CONFIG']['PATH'] . '/biz/modules/globals/controller.php');
