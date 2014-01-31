@@ -470,7 +470,7 @@ abstract class Module {
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/csv; charset=utf-8');
-        header('Content-Disposition: attachement; filename="' . $filename . '_' . date('Y-m-d') . '.csv"');
+        header('Content-Disposition: attachment; filename="' . $filename . '_' . date('Y-m-d') . '.csv"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
