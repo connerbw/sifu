@@ -7,13 +7,19 @@
 
 function sifu($action, $params = null) {
 
+    $c = new Pimple();
+    $c['user'] = function() { return new SifuUser(); };
+
     if ('user' == $action) {
 
         // ---------------------------------------------------------------------
         // User
         // ---------------------------------------------------------------------
 
-        $obj = new User();
+        $c['template'] = function() { return new SifuTemplate(User::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(User::getModuleName()); };
+        $c['obj'] = function() { return new SifuUser(); };
+        $obj = new User($c);
 
         if (!empty($_POST)) {
 
@@ -81,7 +87,10 @@ function sifu($action, $params = null) {
         // Permissions
         // ---------------------------------------------------------------------
 
-        $obj = new Permissions();
+        $c['template'] = function() { return new SifuTemplate(Permissions::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(Permissions::getModuleName()); };
+        $c['obj'] = function() { return new SifuAccess(); };
+        $obj = new Permissions($c);
 
         if (!empty($_POST)) {
 
@@ -127,7 +136,9 @@ function sifu($action, $params = null) {
         // Groups
         // ---------------------------------------------------------------------
 
-        $obj = new Group();
+        $c['template'] = function() { return new SifuTemplate(Group::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(Group::getModuleName()); };
+        $obj = new Group($c);
 
         if (!empty($_POST)) {
 
@@ -170,7 +181,9 @@ function sifu($action, $params = null) {
         // Marketing
         // ---------------------------------------------------------------------
 
-        $obj = new Marketing();
+        $c['template'] = function() { return new SifuTemplate(Marketing::getModuleName()); };
+        $c['renderer'] = function() { return new SifuRenderer(Marketing::getModuleName()); };
+        $obj = new Marketing($c);
 
         switch (isset($params[0]) ? $params[0] : 'default') {
 
@@ -206,9 +219,10 @@ function sifu($action, $params = null) {
         //  Default
         // ---------------------------------------------------------------------
 
-        $obj = new Admin();
+        $c['template'] = function() { return new SifuTemplate(Admin::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(Admin::getModuleName()); };
+        $obj = new Admin($c);
+
         $obj->fallback();
     }
 }
-
-?>

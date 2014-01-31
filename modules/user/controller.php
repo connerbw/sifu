@@ -4,7 +4,13 @@
  * @author     Dac Chartrand <dac.chartrand@gmail.com>
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
  */
-function sifu($action, $params = null) {
+function sifu($action, $params = null)
+{
+
+    $c = new Pimple();
+    $c['user'] = function() { return new SifuUser(); };
+    $c['template'] = function() { return new SifuTemplate(UserAuthenticate::getModuleName()); };
+    $c['renderer'] = function() { return new SifuRenderer(UserAuthenticate::getModuleName()); };
 
     if ('authenticate' == $action) {
 
@@ -12,7 +18,7 @@ function sifu($action, $params = null) {
         // Authenticate
         // ---------------------------------------------------------------------
 
-        $obj = new UserAuthenticate();
+        $obj = new UserAuthenticate($c);
 
         if (!empty($_POST)) {
 
@@ -73,5 +79,3 @@ function sifu($action, $params = null) {
         SifuFunct::redirect(SifuFunct::makeUrl('/home'));
     }
 }
-
-?>

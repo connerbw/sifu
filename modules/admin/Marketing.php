@@ -8,17 +8,17 @@
 class Marketing extends Module {
 
     // Module name
-    protected $module = 'admin';
+    protected static $module = 'admin';
 
 
     /**
-    * Constructor
-    */
-    function __construct() {
+     * @param Pimple $c
+     */
+    function __construct(Pimple $c) {
 
         $this->obj = null; // Safety, don't use parent methods
-        $this->r = new SifuRenderer($this->module); // Renderer
-        parent::__construct(); // Let the parent do the rest
+        $this->r = $c['renderer']; // Renderer
+        parent::__construct($c); // Let the parent do the rest
 
         if (!$this->acl('r')) {
             // Permission error
@@ -86,5 +86,3 @@ class Marketing extends Module {
     }
 
 }
-
-?>

@@ -45,12 +45,6 @@ abstract class Module {
     protected $user;
 
     /**
-    * Module name, maximum 20 characters, ISO 8859-1
-    * @var string
-    */
-    protected $module;
-
-    /**
     * Module Url
     * @var string
     */
@@ -79,27 +73,42 @@ abstract class Module {
     */
     protected $form_error = false;
 
+    /**
+     * Module name, maximum 20 characters, ISO 8859-1
+     * @var string
+     */
+    static protected $module;
+
     // ------------------------------------------------------------------------
     // Methods
     // ------------------------------------------------------------------------
 
     /**
-    * Constructor
-    */
-    function __construct() {
+     * @return mixed
+     */
+    static function getModuleName() {
+        return static::$module;
+    }
+
+
+    /**
+     * @param Pimple $c
+     * @throws Exception
+     */
+    function __construct(Pimple $c) {
 
         // Pre-condition sanity check
-        if (empty($this->module)) throw new Exception('$this->module not set');
+        if (empty(static::$module)) throw new Exception('static::$module not set');
         if (!($this->r instanceof SifuRenderer)) throw new Exception('$this->r is not an instance of SifuRenderer()');
         if (isset($this->obj) && !($this->obj instanceof SifuObject)) throw new Exception('$this->obj is not an instance of SifuObject()');
 
         // Template
-        $this->tpl = new SifuTemplate($this->module); // Template
+        $this->tpl = $c['template']; // Template
         $this->tpl->assignByRef('r', $this->r); // Renderer referenced in template
         $this->r->js_console =& $this->js_console; // JS Console reference
-        $this->tpl->configLoad('my.conf', $this->module); // Config variables
+        $this->tpl->configLoad('my.conf', static::$module); // Config variables
         // Common objects
-        $this->user = new SifuUser();
+        $this->user = $c['user'];
         // Fix stupidities
         if (isset($this->module_url)) {
             $this->module_url = trim($this->module_url);
@@ -116,7 +125,7 @@ abstract class Module {
     */
     function acl($val) {
 
-        return SifuFunct::acl($val, $this->module);
+        return SifuFunct::acl($val, static::$module);
     }
 
 
@@ -149,6 +158,7 @@ abstract class Module {
     * $params[1] integer
     *
     * @param array $params
+    * @param  string $redirect (optional)
     * @return string $redirect
     */
     function flow($params, $redirect = null) {
@@ -254,6 +264,7 @@ abstract class Module {
 
     /**
     * @param int $id
+    * @throws Exception
     */
     function duplicate($id) {
 
@@ -274,6 +285,7 @@ abstract class Module {
 
     /**
     * @param int $id
+    * @throws Exception
     */
     function edit($id) {
 
@@ -295,6 +307,7 @@ abstract class Module {
 
     /**
     * @param int $id
+    * @throws Exception
     */
     function imprint($id) {
 
@@ -325,6 +338,7 @@ abstract class Module {
 
     /**
     * @param int $id
+    * @throws Exception
     */
     function delete($id) {
 
@@ -343,6 +357,7 @@ abstract class Module {
 
     /**
     * @param string $q [optional] custom SQL query
+    * @throws Exception
     */
     function listing($q = null) {
 
@@ -389,6 +404,7 @@ abstract class Module {
     * Export CSV File
     *
     * @param string $q [optional] custom SQL query
+    * @throws Exception
     */
     function export($q = null) {
 
@@ -443,6 +459,7 @@ abstract class Module {
 
     /**
     * @param array $res PDO::FETCH_ASSOC
+    * @throws Exception
     */
     protected function _exportCSV($res) {
 
@@ -481,5 +498,3 @@ abstract class Module {
     }
 
 }
-
-?>

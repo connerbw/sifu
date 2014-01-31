@@ -8,25 +8,24 @@
 class Permissions extends Module {
 
     // Module name
-    protected $module = 'admin';
+    protected static $module = 'admin';
 
 
     /**
-    * Constructor
-    *
-    */
-    function __construct() {
+     * @param Pimple $c
+     */
+    function __construct(Pimple $c) {
 
         // Fill in the blanks
-        $this->obj = new SifuAccess();
+        $this->obj = $c['obj'];
         $this->module_url = '/admin/permissions';
         $this->template_name = 'permissions';
 
         // Renderer
-        $this->r = new AdminRenderer($this->module);
+        $this->r = $c['renderer'];
 
         // Let the parent do the rest
-        parent::__construct();
+        parent::__construct($c);
 
         if (!$this->acl('r')) {
             // Permission error
@@ -60,5 +59,3 @@ class Permissions extends Module {
     }
 
 }
-
-?>

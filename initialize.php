@@ -14,6 +14,11 @@ function sifu_autoload($class_name) {
 
     if (strpos($class_name, 'Smarty') === 0) return;
 
+    if ('Pimple' == $class_name) {
+        require($GLOBALS['CONFIG']['PATH'] . '/includes/symbionts/Pimple.php');
+        return;
+    }
+
     global $controller;
     $dirname = $GLOBALS['CONFIG']['PATH'];
 
@@ -135,5 +140,3 @@ if (isset($_SESSION['users_id']) || isset($_SESSION['nickname'])) {
     }
     unset($u);
 }
-
-?>

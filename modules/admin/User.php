@@ -8,25 +8,24 @@
 class User extends Module {
 
     // Module name
-    protected $module = 'admin';
+    protected static $module = 'admin';
 
 
     /**
-    * Constructor
-    *
-    */
-    function __construct() {
+     * @param Pimple $c
+     */
+    function __construct(Pimple $c) {
 
         // Fill in the blanks
-        $this->obj = new SifuUser();
+        $this->obj = $c['obj'];
         $this->module_url = '/admin/user';
         $this->template_name = 'user';
 
         // Renderer
-        $this->r = new AdminRenderer($this->module);
+        $this->r = $c['renderer'];
 
         // Let the parent do the rest
-        parent::__construct();
+        parent::__construct($c);
     }
 
 
@@ -214,5 +213,3 @@ class User extends Module {
 
 
 }
-
-?>

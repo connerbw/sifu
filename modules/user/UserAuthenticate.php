@@ -8,21 +8,20 @@
 class UserAuthenticate extends Module {
 
     // Module name
-    protected $module = 'user';
+    protected static $module = 'user';
 
     // Maximum password failures
     protected $max_password_failures = 5;
 
 
     /**
-    * Constructor
-    *
-    */
-    function __construct() {
+     * @param Pimple $c
+     */
+    function __construct(Pimple $c) {
 
         $this->obj = null; // Safety, don't use parent methods
-        $this->r = new SifuRenderer($this->module); // Renderer
-        parent::__construct(); // Let the parent do the rest
+        $this->r = $c['renderer']; // Renderer
+        parent::__construct($c); // Let the parent do the rest
     }
 
 
