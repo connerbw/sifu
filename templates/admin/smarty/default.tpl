@@ -7,7 +7,7 @@
 {capture name=header}
 
   {$r->jQueryInit(true)}
-  <script type="text/javascript" src="{$r->makeUrl('/')}/includes/symbionts/jquery-ui/development-bundle/external/jquery.cookie.js"></script>
+  <script type="text/javascript" src="{$r->url}/includes/symbionts/jquery-ui/development-bundle/external/jquery.cookie.js"></script>
 
   <script type="text/javascript">
   // <![CDATA[
