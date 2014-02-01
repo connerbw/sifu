@@ -7,7 +7,7 @@
 
 namespace Sifu;
 
-class User extends Object {
+class User extends \Sifu\Object {
 
     // variables: table names
     public $db_table = 'users';
