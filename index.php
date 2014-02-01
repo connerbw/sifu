@@ -15,7 +15,7 @@ try {
     // Marketing
     // ------------------------------------------------------------------------
 
-    SifuMarketing::setMarketingCookie();
+    \Sifu\Marketing::setMarketingCookie();
 
     // ------------------------------------------------------------------------
     // Prepare
@@ -89,7 +89,7 @@ catch (Exception $e) {
 
     // Abort and rollback transactions
     foreach ($GLOBALS['CONFIG']['DSN'] as $key => $val) {
-        SifuDbInit::abort($key);
+        \Sifu\DbInit::abort($key);
     }
 
     $message = 'Error: ';
@@ -127,6 +127,4 @@ catch (Exception $e) {
 // Breadcrumbs
 // ----------------------------------------------------------------------------
 
-SifuFunct::breadcrumbs();
-
-?>
+\Sifu\Funct::breadcrumbs();

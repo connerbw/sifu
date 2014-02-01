@@ -5,7 +5,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class SifuAccess extends SifuObject {
+namespace Sifu;
+
+class Access extends \Sifu\Object {
 
     // variables: table names
     public $db_table = 'access';
@@ -31,11 +33,11 @@ class SifuAccess extends SifuObject {
 
         $q = "SELECT * FROM {$this->db_table} WHERE id = ? ";
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $id));
         $st->execute();
-        $row = $st->fetch(PDO::FETCH_ASSOC);
+        $row = $st->fetch(\PDO::FETCH_ASSOC);
 
         if (!$names) return $row;
         else {
@@ -58,14 +60,15 @@ class SifuAccess extends SifuObject {
 
 
     /**
-    * @param int|null $id
-    * @param array $item keys match SQL table columns of users and users_info
-    * @return int id
-    */
+     * @param int|null $id
+     * @param array $item keys match SQL table columns of users and users_info
+     * @return int id
+     * @throws \Exception
+     */
     function save($id, array $item) {
 
         // Double check for stupidity
-        if (empty($item['module'])) throw new Exception('Invalid module');
+        if (empty($item['module'])) throw new \Exception('Invalid module');
 
         // Let the parent do the rest
         parent::save($id, $item);
@@ -81,7 +84,7 @@ class SifuAccess extends SifuObject {
 
         $q = "DELETE FROM {$this->db_table} WHERE id = ? ";
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $id));
         $st->execute();
@@ -109,7 +112,7 @@ class SifuAccess extends SifuObject {
         WHERE {$this->db_table_users}.id = ? AND {$this->db_table_groups}.name = 'root'
         ";
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $id));
         $st->execute();
@@ -141,7 +144,7 @@ class SifuAccess extends SifuObject {
         WHERE {$this->db_table_users}.id = ? AND {$this->db_table_groups}.name = 'banned'
         ";
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $id));
         $st->execute();
@@ -205,11 +208,11 @@ class SifuAccess extends SifuObject {
             $q = "SELECT users_id, access_groups_id, chmod FROM {$this->db_table} WHERE module = ? ";
         }
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $module));
         $st->execute();
-        $res = $st->fetchAll(PDO::FETCH_ASSOC);
+        $res = $st->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!$res) {
             // The module was not explicitely set?
@@ -327,7 +330,7 @@ class SifuAccess extends SifuObject {
     */
     function dumpGroups($limit = null, $start = 0, $order = 'id', $way = 'ASC', $fast_paging = false) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = 'SELECT ';
         if ($fast_paging && $db->driver == 'mysql') $q .= 'SQL_CALC_FOUND_ROWS ';
@@ -342,7 +345,7 @@ class SifuAccess extends SifuObject {
         elseif ($limit) $q .= "LIMIT $limit ";
 
         $st = $db->pdo->query($q);
-        return $st->fetchAll(PDO::FETCH_ASSOC);
+        return $st->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 
@@ -359,7 +362,7 @@ class SifuAccess extends SifuObject {
     */
     function pumpGroups($where, $limit = null, $start = 0, $order = 'id', $way = 'ASC', $fast_paging = false) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = 'SELECT ';
         if ($fast_paging && $db->driver == 'mysql') $q .= 'SQL_CALC_FOUND_ROWS ';
@@ -374,7 +377,7 @@ class SifuAccess extends SifuObject {
         elseif ($limit) $q .= "LIMIT $limit ";
 
         $st = $db->pdo->query($q);
-        return $st->fetchAll(PDO::FETCH_ASSOC);
+        return $st->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 
@@ -393,11 +396,11 @@ class SifuAccess extends SifuObject {
             $q = "SELECT * FROM {$this->db_table_groups} WHERE name = ? ";
         }
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $group));
         $st->execute();
-        $item = $st->fetch(PDO::FETCH_ASSOC);
+        $item = $st->fetch(\PDO::FETCH_ASSOC);
 
         if (!$item) return false;
         else return $item;
@@ -405,12 +408,13 @@ class SifuAccess extends SifuObject {
 
 
     /**
-    * Save group
-    *
-    * @param int|null $id
-    * @param array $item keys match SQL table columns
-    * @return int id
-    */
+     * Save group
+     *
+     * @param int|null $id
+     * @param array $item keys match SQL table columns
+     * @return int id
+     * @throws \Exception
+     */
     function saveGroup($id, array $item) {
 
         // --------------------------------------------------------------------
@@ -419,22 +423,22 @@ class SifuAccess extends SifuObject {
 
         unset($item['id']); // Don't allow spoofing of the id in the array
 
-        if (empty($item['name'])) throw new Exception('Invalid name');
+        if (empty($item['name'])) throw new \Exception('Invalid name');
 
         if (strtolower($item['name']) == 'root' || strtolower($item['name']) == 'banned') {
-            throw new Exception("'{$item['name']}' is a reserved group");
+            throw new \Exception("'{$item['name']}' is a reserved group");
         }
 
         // Check for duplicate
-        $res = SifuFunct::exists($this->db_table_groups, 'name', $item['name']);
-        if ($res && $res != $id) throw new Exception('Duplicate group: ' . $item['name']);
+        $res = Funct::exists($this->db_table_groups, 'name', $item['name']);
+        if ($res && $res != $id) throw new \Exception('Duplicate group: ' . $item['name']);
 
         // --------------------------------------------------------------------
         // Go!
         // --------------------------------------------------------------------
 
         // Begin transaction
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $tid = $db->requestTransaction();
 
         if ($id) {
@@ -465,13 +469,14 @@ class SifuAccess extends SifuObject {
 
 
     /**
-    * Delete group
-    *
-    * @param int $id
-    */
+     * Delete group
+     *
+     * @param int $id
+     * @throws \Exception
+     */
     function deleteGroup($id) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = "SELECT name FROM {$this->db_table_groups} WHERE id = ? ";
         $st = $db->pdo->prepare($q);
@@ -480,7 +485,7 @@ class SifuAccess extends SifuObject {
         $name = $st->fetchColumn();
 
         if ($name == 'root' || $name == 'banned') {
-           throw new Exception("'$name' is a reserved group");
+           throw new \Exception("'$name' is a reserved group");
         }
 
         // Begin transaction
@@ -515,7 +520,7 @@ class SifuAccess extends SifuObject {
     */
     function countGroups($where = null, $fast_paging = false) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         if ($fast_paging && $db->driver == 'mysql') {
 
@@ -533,5 +538,3 @@ class SifuAccess extends SifuObject {
 
 
 }
-
-?>

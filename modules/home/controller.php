@@ -8,15 +8,15 @@
 function sifu($action, $params = null)
 {
     $c = new Pimple();
-    $c['user'] = function() { return new SifuUser(); };
-    $c['template'] = function() { return new SifuTemplate(Home::getModuleName()); };
-    $c['renderer'] = function() { return new SifuRenderer(Home::getModuleName()); };
+    $c['user'] = function() { return new \Sifu\User(); };
+    $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Home\Home::getModuleName()); };
+    $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\Home\Home::getModuleName()); };
 
     switch($action) {
 
     default:
 
-        $home = new Home($c);
+        $home = new \Sifu\Modules\Home\Home($c);
         $home->display();
     }
 }

@@ -6,7 +6,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class SifuPgsql extends SifuDb {
+namespace Sifu\Db;
+
+class Pgsql extends Db {
 
     /**
     * @param PDO $pdo
@@ -27,7 +29,7 @@ class SifuPgsql extends SifuDb {
     	$sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ";
     	
         $st = $this->pdo->query($sql);
-        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             $tables[] = $row['table_name'];
         }
         return $tables;    	
@@ -45,7 +47,7 @@ class SifuPgsql extends SifuDb {
         $sql = "SELECT column_name FROM information_schema.columns WHERE table_name = '$table' ";
         
         $st = $this->pdo->query($sql);
-        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             $columns[] = $row['column_name'];
         }
         return $columns;
@@ -88,12 +90,10 @@ class SifuPgsql extends SifuDb {
         $sql .= ") AND table_schema = 'public' ";
 
         $st = $this->pdo->query($sql);
-        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             $tables[] = $row['table_name'];
         }
         return $tables;
     }
 
 }
-
-?>

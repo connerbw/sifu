@@ -8,9 +8,9 @@ function sifu($action, $params = null)
 {
 
     $c = new Pimple();
-    $c['user'] = function() { return new SifuUser(); };
-    $c['template'] = function() { return new SifuTemplate(UserAuthenticate::getModuleName()); };
-    $c['renderer'] = function() { return new SifuRenderer(UserAuthenticate::getModuleName()); };
+    $c['user'] = function() { return new \Sifu\User(); };
+    $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\UserAuthenticate::getModuleName()); };
+    $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\UserAuthenticate::getModuleName()); };
 
     if ('authenticate' == $action) {
 
@@ -18,7 +18,7 @@ function sifu($action, $params = null)
         // Authenticate
         // ---------------------------------------------------------------------
 
-        $obj = new UserAuthenticate($c);
+        $obj = new \Sifu\Modules\UserAuthenticate($c);
 
         if (!empty($_POST)) {
 
@@ -27,7 +27,7 @@ function sifu($action, $params = null)
                 'nickname',
                 'password',
                 );
-            SifuFunct::shampoo($_POST, $keys);
+            \Sifu\Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('nickname')) $error = 'nickname';
@@ -35,8 +35,8 @@ function sifu($action, $params = null)
 
             if ($error) {
                 // Write error to console
-                $obj->js_console .= SifuLog::jsConsole('Error: ', $error);
-                $obj->js_console .= SifuLog::jsConsole('$_POST: ', $_POST);
+                $obj->js_console .= \Sifu\Log::jsConsole('Error: ', $error);
+                $obj->js_console .= \Sifu\Log::jsConsole('$_POST: ', $_POST);
                 // Set form error
                 $obj->setFormError(true);
             }
@@ -67,7 +67,7 @@ function sifu($action, $params = null)
 
             default:
 
-                SifuFunct::redirect(SifuFunct::makeUrl('/user'));
+                \Sifu\Funct::redirect(\Sifu\Funct::makeUrl('/user'));
         }
     }
     else {
@@ -76,6 +76,6 @@ function sifu($action, $params = null)
         // Default
         // ---------------------------------------------------------------------
 
-        SifuFunct::redirect(SifuFunct::makeUrl('/home'));
+        \Sifu\Funct::redirect(\Sifu\Funct::makeUrl('/home'));
     }
 }

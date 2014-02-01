@@ -5,16 +5,21 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class Marketing extends Module {
+namespace Sifu\Modules\Admin;
+
+use Sifu\Funct as Funct;
+use Sifu\DbInit as DbInit;
+
+class Marketing extends \Sifu\Modules\Module {
 
     // Module name
     protected static $module = 'admin';
 
 
     /**
-     * @param Pimple $c
+     * @param \Pimple $c
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         $this->obj = null; // Safety, don't use parent methods
         $this->r = $c['renderer']; // Renderer
@@ -22,7 +27,7 @@ class Marketing extends Module {
 
         if (!$this->acl('r')) {
             // Permission error
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
     }
 
@@ -31,9 +36,9 @@ class Marketing extends Module {
     */
     function dump() {
 
-        $user = new SifuUser();
-        $marketing = new SifuMarketing();
-        $db = SifuDbInit::get();
+        $user = new \Sifu\User();
+        $marketing = new \Sifu\Marketing();
+        $db = DbInit::get();
 
         $q = "SELECT
         {$marketing->db_table}.*, {$user->db_table}.nickname, {$user->db_table}.email, {$user->db_table_info}.*
@@ -43,15 +48,15 @@ class Marketing extends Module {
         ";
 
         $st = $db->pdo->query($q);
-        $res = $st->fetchAll(PDO::FETCH_ASSOC);
+        $res = $st->fetchAll(\PDO::FETCH_ASSOC);
 
         // Sanitze
         foreach ($res as $key => &$val) {
             unset($val['id']);
             unset($val['image']);
             if ($val['dob'] == '0000-00-00') $val['dob'] = null;
-            $val['url'] = !empty($val['url']) ? SifuFunct::canonicalizeUrl($val['url']) : null;
-            $val['referrer'] = !empty($val['referrer']) ? SifuFunct::canonicalizeUrl($val['referrer']) : null;
+            $val['url'] = !empty($val['url']) ? Funct::canonicalizeUrl($val['url']) : null;
+            $val['referrer'] = !empty($val['referrer']) ? Funct::canonicalizeUrl($val['referrer']) : null;
         }
         unset($val); // dereference
 
@@ -69,8 +74,8 @@ class Marketing extends Module {
 
         unset($q); // Unused
 
-        $user = new SifuUser();
-        $marketing = new SifuMarketing();
+        $user = new \Sifu\User();
+        $marketing = new \Sifu\Marketing();
 
         $q = "SELECT
         {$marketing->db_table}.*, {$user->db_table}.nickname, {$user->db_table}.email, {$user->db_table_info}.*

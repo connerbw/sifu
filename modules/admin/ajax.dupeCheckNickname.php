@@ -35,7 +35,7 @@ $id = _GET('id');
 $result = true;
 
 try {
-    $res = SifuFunct::exists('users', 'nickname', $nickname);
+    $res = \Sifu\Funct::exists('users', 'nickname', $nickname);
 }
 catch (PDOException $e) {
     failure('Database error');
@@ -43,7 +43,7 @@ catch (PDOException $e) {
 
 if ($res && $res != $id) {
     // No duplicates allowed
-    $gtext = SifuFunct::getGtext('admin');
+    $gtext = \Sifu\Funct::getGtext('admin');
     $result = !empty($gtext['ajax_error_3']) ? $gtext['ajax_error_3'] : 'ajax_error_3';
 }
 

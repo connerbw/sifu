@@ -5,9 +5,11 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
+namespace Sifu;
+
 require_once(dirname(__FILE__) . '/symbionts/Smarty/libs/Smarty.class.php');
 
-class SifuTemplate extends Smarty {
+class Template extends \Smarty {
 
     public $module;
     public $partition;
@@ -70,7 +72,7 @@ class SifuTemplate extends Smarty {
 
         $compile_dir = $GLOBALS['CONFIG']['PATH'] . "/temporary/smarty/templates_c/$partition/$module/";
         if(!is_dir($compile_dir) && !mkdir($compile_dir, 0777, true)) {
-            throw new Exception('Missing compile dir ' . $compile_dir);
+            throw new \Exception('Missing compile dir ' . $compile_dir);
         }
         $this->setCompileDir($compile_dir);
 
@@ -81,7 +83,7 @@ class SifuTemplate extends Smarty {
 
         $cache_dir = $GLOBALS['CONFIG']['PATH'] . "/temporary/smarty/cache/$partition/$module/";
         if(!is_dir($cache_dir) && !mkdir($cache_dir, 0777, true)) {
-            throw new Exception('Missing cache dir ' . $cache_dir);
+            throw new \Exception('Missing cache dir ' . $cache_dir);
         }
         $this->setCacheDir($cache_dir);
         $this->cache_lifetime = $GLOBALS['CONFIG']['CACHE_LIFETIME'];
@@ -166,20 +168,3 @@ class SifuTemplate extends Smarty {
 
 }
 
-
-// -------------------------------------------------------------------------
-// Smarty extras
-// -------------------------------------------------------------------------
-
-/**
-* Simple trim filter for Smarty templates
-*
-* @param string $tpl_output
-* @param object Smarty_Internal_Template $template
-* @return string
-*/
-function _sifu_template_trim($tpl_output, Smarty_Internal_Template $template) {
-    return trim($tpl_output);
-}
-
-?>

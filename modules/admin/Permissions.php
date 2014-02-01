@@ -5,16 +5,21 @@
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
  */
 
-class Permissions extends Module {
+namespace Sifu\Modules\Admin;
+
+use Sifu\Funct as Funct;
+use Sifu\DbInit as DbInit;
+
+class Permissions extends \Sifu\Modules\Module {
 
     // Module name
     protected static $module = 'admin';
 
 
     /**
-     * @param Pimple $c
+     * @param \Pimple $c
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         // Fill in the blanks
         $this->obj = $c['obj'];
@@ -29,7 +34,7 @@ class Permissions extends Module {
 
         if (!$this->acl('r')) {
             // Permission error
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
     }
 
@@ -42,7 +47,7 @@ class Permissions extends Module {
         unset($q); // Unused
 
         $access = $this->obj;
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = 'SELECT ';
         if ($db->driver == 'mysql') $q .= 'SQL_CALC_FOUND_ROWS ';

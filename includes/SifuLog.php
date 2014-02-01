@@ -5,7 +5,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class SifuLog {
+namespace Sifu;
+
+class Log {
 
     /**
     *

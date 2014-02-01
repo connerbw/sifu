@@ -5,10 +5,12 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class SifuMysql extends SifuDb {
+namespace Sifu\Db;
+
+class Mysql extends Db {
 
     /**
-    * @param PDO $pdo
+    * @param \PDO $pdo
     */
     public function __construct($pdo) {
 
@@ -19,7 +21,7 @@ class SifuMysql extends SifuDb {
         $pdo->query("SET SESSION sql_mode='' ");
 
         // Let PDO handle MySql's (lack of) caching?
-        // if (defined('PDO::ATTR_EMULATE_PREPARES')) $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        // if (defined('PDO::ATTR_EMULATE_PREPARES')) $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
 
         parent::__construct($pdo);
     }
@@ -34,8 +36,9 @@ class SifuMysql extends SifuDb {
 
         $sql = 'SHOW TABLES ';
 
+        $tables = array();
         $st = $this->pdo->query($sql);
-        foreach ($st->fetchAll(PDO::FETCH_NUM) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_NUM) as $row) {
             $tables[] = $row[0];
         }
         return $tables;
@@ -52,8 +55,9 @@ class SifuMysql extends SifuDb {
 
         $sql = "SHOW COLUMNS FROM $table ";
 
+        $columns = array();
         $st = $this->pdo->query($sql);
-        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             $columns[] = $row['Field'];
         }
         return $columns;
@@ -90,7 +94,7 @@ class SifuMysql extends SifuDb {
         // Get current database name
         $sql = 'SELECT DATABASE() ';
         $st = $this->pdo->query($sql);
-        $row = $st->fetch(PDO::FETCH_NUM);
+        $row = $st->fetch(\PDO::FETCH_NUM);
         $dbname = $row[0];
 
         // Find all the tables with specific column names in them
@@ -104,12 +108,10 @@ class SifuMysql extends SifuDb {
         $sql .= ") AND TABLE_SCHEMA = '$dbname' ";
 
         $st = $this->pdo->query($sql);
-        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             $tables[] = $row['TABLE_NAME'];
         }
         return $tables;
     }
 
 }
-
-?>

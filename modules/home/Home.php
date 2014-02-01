@@ -5,16 +5,18 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class Home extends Module {
+namespace Sifu\Modules\Home;
+
+class Home extends \Sifu\Modules\Module {
 
     // Module name
     protected static $module = 'home';
 
 
     /**
-     * @param Pimple $c
+     * @param \Pimple $c
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         $this->obj = null; // Safety, don't use parent methods
         $this->r = $c['renderer']; // Renderer

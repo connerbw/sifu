@@ -5,12 +5,14 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-require_once(dirname(__FILE__) . '/SifuDb/interface.SifuDb.php');
+namespace Sifu\Db;
 
-abstract class SifuDb implements ISifuDb {
+require_once(__DIR__. '/interface.SifuDb.php');
+
+abstract class Db implements iDb {
 
     /**
-     * @var PDO
+     * @var \PDO
      */
     public $pdo;
 
@@ -28,12 +30,12 @@ abstract class SifuDb implements ISifuDb {
 
 
     /**
-    * @param PDO $pdo
+    * @param \PDO $pdo
     */
     function __construct($pdo) {
 
         $this->pdo = $pdo;
-        $this->driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $this->driver = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
     }
 
 
@@ -59,13 +61,15 @@ abstract class SifuDb implements ISifuDb {
 
 
     /**
-    * Commit transaction
-    *
-    * @param string $tid unique id
-    */
-    function commitTransaction($tid) {
+     * Commit transaction
+     *
+     * @param string $tid unique id
+     * @throws \Exception
+     */
+    function commitTransaction($tid)
+    {
 
-        if (empty($this->transaction)) throw new Exception('Transaction was never initiated');
+        if (empty($this->transaction)) throw new \Exception('Transaction was never initiated');
 
         if ($tid == $this->transaction) {
             $this->pdo->commit();
@@ -92,24 +96,25 @@ abstract class SifuDb implements ISifuDb {
 
 
     /**
-    * Link tables are special tables that join two other tables using a 1 to 1
-    * relationship with primary keys. The table name is "link__" followed by two
-    * other table names. The order of the two other tables should be in
-    * alphabetical order. An example of a link table for "foo" and "bar" :
-    *
-    * CREATE TABLE IF NOT EXISTS `link__bar__foo` (
-    *  `foo_id` int(11) NOT NULL,
-    *  `bar_id` int(11) NOT NULL,
-    *  PRIMARY KEY (`foo_id`,`bar_id`),
-    *  KEY `bar_id` (`bar_id`)
-    * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    *
-    *
-    * @param string $table name of a 1st table
-    * @param string $table name of a 2nd table
-    * @return string
-    **/
-    function buildLinkTableName($table1, $table2) {
+     * Link tables are special tables that join two other tables using a 1 to 1
+     * relationship with primary keys. The table name is "link__" followed by two
+     * other table names. The order of the two other tables should be in
+     * alphabetical order. An example of a link table for "foo" and "bar" :
+     *
+     * CREATE TABLE IF NOT EXISTS `link__bar__foo` (
+     *  `foo_id` int(11) NOT NULL,
+     *  `bar_id` int(11) NOT NULL,
+     *  PRIMARY KEY (`foo_id`,`bar_id`),
+     *  KEY `bar_id` (`bar_id`)
+     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+     *
+     *
+     * @param string $table1 name of a 1st table
+     * @param string $table2 name of a 2nd table
+     * @return string
+     */
+    function buildLinkTableName($table1, $table2)
+    {
 
         $tmp = array($table1, $table2);
         natsort($tmp);
@@ -149,7 +154,7 @@ abstract class SifuDb implements ISifuDb {
         $this->autoBind($st, array(1 => $id));
         $st->execute();
         $return = array();
-        foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             unset($row["{$table}_id"]);
             $return[] = array_pop($row);
         }
@@ -260,7 +265,7 @@ abstract class SifuDb implements ISifuDb {
     function fuzzyFindDuplicateRows($table, $columns, $use_stopwords = false, $stopwords_lang = 'en') {
 
     	$st = $this->pdo->query("SELECT * FROM $table ");
-    	$results =  $st->fetchAll(PDO::FETCH_ASSOC);
+    	$results =  $st->fetchAll(\PDO::FETCH_ASSOC);
 
     	$stopwords = array();
     	if ($use_stopwords) {
@@ -333,7 +338,7 @@ abstract class SifuDb implements ISifuDb {
     /**
     * Automatic bindParam() of an array to a PDOStatement
     *
-    * @param PDOStatement $st
+    * @param \PDOStatement $st
     * @param array $bind keys are parameter identifiers, values are sanitized data
     */
     function autoBind($st, $bind) {
@@ -342,10 +347,10 @@ abstract class SifuDb implements ISifuDb {
         foreach ($bind as $key => &$val) {
 
             // Guess the constant
-            if (is_int($val)) $const = PDO::PARAM_INT;
-            elseif (is_bool($val)) $const = PDO::PARAM_BOOL;
-            elseif (is_null($val) || $val == '') $const = PDO::PARAM_NULL;
-            else $const = PDO::PARAM_STR;
+            if (is_int($val)) $const = \PDO::PARAM_INT;
+            elseif (is_bool($val)) $const = \PDO::PARAM_BOOL;
+            elseif (is_null($val) || $val == '') $const = \PDO::PARAM_NULL;
+            else $const = \PDO::PARAM_STR;
 
             // Guess if question marks or named placeholders
             if ((int) $key == $key && (int) $key > 0) $st->bindParam((int) $key, $val, $const);
@@ -419,7 +424,6 @@ abstract class SifuDb implements ISifuDb {
         $query    = 'UPDATE ';
         $column = "$table SET ";
         $placeholders   = '';
-        $where = '';
 
         foreach($form as $key => $value ) {
             $placeholders .= ($useValues ? "$value = :$value, " : "$key = :$key, ");
@@ -433,5 +437,3 @@ abstract class SifuDb implements ISifuDb {
     }
 
 }
-
-?>

@@ -5,6 +5,10 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
+namespace \Sifu\Modules\User;
+
+use Sifu\Funct as Funct;
+
 class UserAuthenticate extends Module {
 
     // Module name
@@ -15,9 +19,9 @@ class UserAuthenticate extends Module {
 
 
     /**
-     * @param Pimple $c
+     * @param \Pimple $c
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         $this->obj = null; // Safety, don't use parent methods
         $this->r = $c['renderer']; // Renderer
@@ -31,7 +35,7 @@ class UserAuthenticate extends Module {
     function login() {
 
         if ($this->user->isValidSession())
-            SifuFunct::redirect(SifuFunct::getPreviousURL()); // Already logged in
+            Funct::redirect(Funct::getPreviousURL()); // Already logged in
 
         // --------------------------------------------------------------------
         // Process
@@ -54,7 +58,7 @@ class UserAuthenticate extends Module {
                 // Login sucessful
                 unset($_SESSION['failure']);
                 $this->user->setSession($auth_user['id']);
-                SifuFunct::redirect(SifuFunct::getPreviousURL());
+                Funct::redirect(Funct::getPreviousURL());
             }
         }
 
@@ -79,7 +83,7 @@ class UserAuthenticate extends Module {
 
         // Other variables
         $this->tpl->assign($_POST);
-        $this->r->text['form_url'] = SifuFunct::makeUrl("/user/authenticate/login");
+        $this->r->text['form_url'] = Funct::makeUrl("/user/authenticate/login");
 
         // Display
         $this->tpl->display('login.tpl');
@@ -95,10 +99,8 @@ class UserAuthenticate extends Module {
             $this->user->killSession();
         }
 
-        SifuFunct::redirect(SifuFunct::makeUrl('/home'));
+        Funct::redirect(Funct::makeUrl('/home'));
     }
 
 
 }
-
-?>

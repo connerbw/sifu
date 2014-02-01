@@ -5,16 +5,22 @@
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
  */
 
-class Group extends Module {
+namespace Sifu\Modules\Admin;
+
+use Sifu\Funct as Funct;
+use Sifu\Access as Access;
+use Sifu\Pager as Pager;
+
+class Group extends \Sifu\Modules\Module {
 
     // Module name
     protected static $module = 'admin';
 
 
     /**
-     * @param Pimple $c
+     * @param \Pimple $c
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         $this->obj = null; // Safety, don't use parent methods
         $this->r = $c['renderer']; // Renderer
@@ -22,7 +28,7 @@ class Group extends Module {
 
         if (!$this->acl('r')) {
             // Permission error
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
     }
 
@@ -34,7 +40,7 @@ class Group extends Module {
 
         if (!$this->acl('w')) {
             // Permission error, not allowed to edit
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         // --------------------------------------------------------------------
@@ -45,7 +51,7 @@ class Group extends Module {
 
         if (!empty($_POST) && $this->getFormError() === false) {
 
-            $access = new SifuAccess();
+            $access = new Access();
 
             if (!empty($this->_CLEAN['id'])) {
 
@@ -75,7 +81,7 @@ class Group extends Module {
 
         // Other variables
         $this->tpl->assign($_POST);
-        if (empty($this->r->text['form_url'])) $this->r->text['form_url'] = SifuFunct::makeUrl('/admin/group/new');
+        if (empty($this->r->text['form_url'])) $this->r->text['form_url'] = Funct::makeUrl('/admin/group/new');
 
         // Display
         $this->tpl->display('edit_group.tpl');
@@ -89,11 +95,11 @@ class Group extends Module {
     */
     function edit($id) {
 
-        $access = new SifuAccess();
+        $access = new Access();
         $form = $access->getGroup($id);
 
-        if (!$form) SifuFunct::redirect(SifuFunct::makeUrl('/admin/group/new'));
-        else $this->r->text['form_url'] = SifuFunct::makeUrl("/admin/group/edit/$id");
+        if (!$form) Funct::redirect(Funct::makeUrl('/admin/group/new'));
+        else $this->r->text['form_url'] = Funct::makeUrl("/admin/group/edit/$id");
 
         array_walk_recursive($form, create_function('&$val', '$val = htmlspecialchars($val, ENT_QUOTES, "UTF-8", false);')); // Sanitize
 
@@ -112,11 +118,11 @@ class Group extends Module {
 
         if (!$this->acl('x')) {
             // Permission error, not allowed to delete
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
-        $access = new SifuAccess();
-        $form = $access->deleteGroup($id);
+        $access = new Access();
+        $access->deleteGroup($id);
         $this->success();
     }
 
@@ -128,8 +134,8 @@ class Group extends Module {
 
         unset($q); // Unused
 
-        $access = new SifuAccess();
-        $pager = new SifuPager();
+        $access = new Access();
+        $pager = new Pager();
 
         $res = $access->dumpGroups($pager->getLimit(), $pager->getStart(), 'name', 'ASC', true);
         $pager->setPages($access->countGroups(null, true));
@@ -137,7 +143,7 @@ class Group extends Module {
         array_walk_recursive($res, create_function('&$val', '$val = htmlspecialchars($val, ENT_QUOTES, "UTF-8", false);')); // Sanitize
 
         $this->r->arr['list'] = $res;
-        $this->r->text['pager'] = $pager->pagesHtml(SifuFunct::makeUrl('/admin/group/list'));
+        $this->r->text['pager'] = $pager->pagesHtml(Funct::makeUrl('/admin/group/list'));
 
         $this->tpl->display('list_group.tpl');
     }

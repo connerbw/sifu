@@ -27,7 +27,10 @@
 * For more info:
 * http://www.phpinsider.com/smarty-forum/viewtopic.php?t=12683
 */
-class SifuRenderer {
+
+namespace Sifu;
+
+class Renderer {
 
     // Strings
     public $module; // Module name
@@ -72,7 +75,7 @@ class SifuRenderer {
         $this->sitename = $GLOBALS['CONFIG']['TITLE'];
         $this->bool['analytics'] = false;
 
-        $this->_gtext = SifuFunct::getGtext($module); // Gtext
+        $this->_gtext = Funct::getGtext($module); // Gtext
         $this->module = $module; // Module
 
         // Partition
@@ -202,7 +205,7 @@ class SifuRenderer {
     */
     function acl($val) {
 
-        return SifuFunct::acl($val, $this->module);
+        return Funct::acl($val, $this->module);
     }
 
 
@@ -214,7 +217,7 @@ class SifuRenderer {
     */
     function cleanFileName($filename) {
 
-        return SifuFunct::cleanFileName($filename);
+        return Funct::cleanFileName($filename);
     }
 
 
@@ -228,7 +231,7 @@ class SifuRenderer {
     */
     function makeUrl($path, $query = null, $full = false) {
 
-        $url = SifuFunct::makeUrl($path, $query, $full);
+        $url = Funct::makeUrl($path, $query, $full);
         return htmlspecialchars($url); // Rendering HTML, fix it
     }
 
@@ -240,7 +243,7 @@ class SifuRenderer {
     */
     function myHttpServer() {
 
-        return SifuFunct::myHttpServer();
+        return Funct::myHttpServer();
     }
 
 
@@ -257,7 +260,7 @@ class SifuRenderer {
     */
     static function navlist() {
 
-        $gtext = SifuFunct::getGtext();
+        $gtext = Funct::getGtext();
         if (isset($gtext['navcontainer'])) $list = $gtext['navcontainer'];
         else return '';
 
@@ -266,7 +269,7 @@ class SifuRenderer {
         foreach($list as $key => $val) {
             if (strpos($key, '__get_module_menu__::') === 0) {
                 $get = explode('::', $key);
-                $menu = SifuFunct::getModuleMenu($get[1]);
+                $menu = Funct::getModuleMenu($get[1]);
                 if (is_array($menu)) {
                     foreach($menu as $key2 => $val2) {
                         $tmp[$key2] = $val2;
@@ -309,7 +312,7 @@ class SifuRenderer {
         $r = (object) $r;
 
         // Template
-        $tpl = new SifuTemplate('globals');
+        $tpl = new Template('globals');
         $tpl->assignByRef('r', $r);
 
         return $tpl->fetch('navlist.tpl');
@@ -419,12 +422,12 @@ class SifuRenderer {
         if (!empty($_SESSION['language'])) $lang = $_SESSION['language'];
         else $lang = $GLOBALS['CONFIG']['LANGUAGE'];
 
+        $js = '';
         if (file_exists($GLOBALS['CONFIG']['PATH'] . "/includes/symbionts/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$lang}.js")) {
-
             $tmp = $GLOBALS['CONFIG']['URL'] . "/includes/symbionts/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$lang}.js";
             $js = '<script type="text/javascript" src="' . $tmp . '"></script>' . "\n";
-            return $js;
         }
+        return $js;
     }
 
 
@@ -484,14 +487,13 @@ class SifuRenderer {
     */
     function jsConsole() {
 
+        $tmp = '';
         if (!empty($this->js_console)) {
-
             $tmp = "<script type='text/javascript'>\n// <![CDATA[\n";
-            $tmp .= SifuLog::jsConsoleInit() . $this->js_console;
+            $tmp .= Log::jsConsoleInit() . $this->js_console;
             $tmp .= "\n// ]]>\n</script>\n";
-
-            return $tmp;
         }
+        return $tmp;
     }
 
 
@@ -622,71 +624,3 @@ class SifuRenderer {
     }
 
 }
-
-
-// -------------------------------------------------------------------------
-// Smarty extras
-// -------------------------------------------------------------------------
-
-/**
-* Render navlist
-*
-* @global string $_SESSION['nickname']
-* @param array $params smarty {insert} parameters
-* @return string html
-*/
-function insert_navlist($params) {
-
-    unset($params); // Not used
-    return SifuRenderer::navlist();
-}
-
-
-/**
-* Render userInfo
-*
-* @global string $_SESSION['nickname']
-* @global bool $CONFIG['REGISTRATIONS']
-* @param array $params smarty {insert} parameters
-* @return string html
-*/
-function insert_userInfo($params) {
-
-    unset($params); // Not used
-
-    $tpl = new SifuTemplate('globals');
-    $r = new SifuRenderer('globals'); // Renderer
-    $tpl->assignByRef('r', $r); // Renderer referenced in template
-
-
-    if (!empty($_SESSION['nickname'])) {
-
-        if (SifuFunct::acl('r', 'admin')) $r->bool['acl'] = true;
-        $r->text['nickname'] = $_SESSION['nickname'];
-        $r->text['users_id'] = $_SESSION['users_id'];
-
-        return $tpl->fetch('userinfo.tpl');
-    }
-    else {
-
-        $r->bool['registrations'] = $GLOBALS['CONFIG']['REGISTRATIONS'];
-        return $tpl->fetch('userlogin.tpl');
-    }
-}
-
-
-/**
-* getPreviousURL wrapper
-*
-* @param array $params smarty {insert} parameters
-* @return string url
-*/
-function insert_previousURL($params) {
-
-    unset($params); // Not used
-
-    return SifuFunct::getPreviousURL();
-}
-
-
-?>

@@ -5,7 +5,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class SifuFunct {
+namespace Sifu;
+
+class Funct {
 
     // Static class, no cloning or instantiating allowed
     final private function __construct() { }
@@ -42,7 +44,7 @@ class SifuFunct {
 
         $q = "SELECT id FROM $table WHERE $col = ? ";
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare($q);
         $db->autoBind($st, array(1 => $val));
         $st->execute();
@@ -188,17 +190,18 @@ class SifuFunct {
 
 
     /**
-    * Return data directory
-    *
-    * @global string $CONFIG['PATH']
-    * @param string $module
-    * @return string
-    */
+     * Return data directory
+     *
+     * @global string $CONFIG ['PATH']
+     * @param string $module
+     * @return string
+     * * @throws \Exception
+     */
     static function dataDir($module) {
 
         $data_dir = $GLOBALS['CONFIG']['PATH'] . "/data/$module";
         if(!is_dir($data_dir) && !mkdir($data_dir, 0777, true)) {
-            throw new Exception('Missing data dir ' . $data_dir);
+            throw new \Exception('Missing data dir ' . $data_dir);
         }
 
         return $data_dir;
@@ -217,7 +220,7 @@ class SifuFunct {
 
         if (class_exists('ZipArchive')) {
 
-            $zip = new ZipArchive();
+            $zip = new \ZipArchive();
             if ($zip->open($file) === true) {
                 $_ret = $zip->extractTo($dir);
                 $zip->close();
@@ -261,7 +264,7 @@ class SifuFunct {
 
             // Windows patch for buggy perimssions on some machines
             $command = 'cmd /C "rmdir /S /Q "'.str_replace('//', '\\', $dirname).'\\""';
-            $wsh = new COM("WScript.Shell");
+            $wsh = new \COM("WScript.Shell");
             $wsh->Run($command, 7, false);
             $wsh = null;
             return true;
@@ -346,7 +349,7 @@ class SifuFunct {
     * @param array $args the parameters to be passed to $replacement, as an indexed array
     * @return mixed the return value of the callback, or false
     */
-    static function markedAsDeprecated($deprecated, $replacement = false, $args = array()) {
+    static function markedAsDeprecated($deprecated, $replacement = null, $args = array()) {
 
     	trigger_error("Deprecated function/method: $deprecated ", E_USER_NOTICE);
 
@@ -363,10 +366,12 @@ class SifuFunct {
 
 
     /**
-    * Get the last day of a month
-    *
-    * @return string YYYY-MM-DD
-    */
+     * Get the last day of a month
+     *
+     * @param string $month
+     * @param string $year
+     * @return string|bool YYYY-MM-DD
+     */
     static function lastDay($month = '', $year = '') {
 
         if (empty($month)) $month = date('m');
@@ -496,10 +501,11 @@ class SifuFunct {
 
 
     /**
-    * Canonicalize URL
-    *
-    * @param  string $url
-    */
+     * Canonicalize URL
+     *
+     * @param  string $url
+     * @return string
+     */
     static function canonicalizeUrl($url) {
 
         // remove trailing slash
@@ -579,7 +585,7 @@ class SifuFunct {
         static $arr = array();
         if (isset($arr[$key])) return $arr[$key];
 
-        $access = new SifuAccess();
+        $access = new Access();
 
         // More cache
         static $user_is_root = null;
@@ -677,5 +683,3 @@ class SifuFunct {
 
 
 }
-
-?>

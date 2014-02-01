@@ -3,7 +3,7 @@
 /* Navigation menu */
 
 $gtext['navcontainer'] = array(
-    'Accueil' => SifuFunct::makeUrl('/home'),
+    'Accueil' => \Sifu\Funct::makeUrl('/home'),
     // '__get_module_menu__::home' => null,
     'Code source' => 'https://github.com/connerbw/sifu/',
     );
@@ -18,12 +18,12 @@ $gtext['navcontainer'] = array(
 *
 *     // Typical menu structure
 *     'Example 1' => array(
-*         SifuFunct::makeUrl('/example1'),
+*         \Sifu\Funct::makeUrl('/example1'),
 *         array(
 *             // Another example
 *             'Trotch' => 'http://www.trotch.com/',
 *             'Google' => 'http://www.google.com/',
-*             'Yet Another Home' => SifuFunct::makeUrl('/home'),
+*             'Yet Another Home' => \Sifu\Funct::makeUrl('/home'),
 *             ),
 *         ),
 *

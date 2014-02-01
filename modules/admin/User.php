@@ -5,16 +5,21 @@
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
  */
 
-class User extends Module {
+namespace Sifu\Modules\Admin;
+
+use Sifu\Funct as Funct;
+use Sifu\DbInit as DbInit;
+
+class User extends \Sifu\Modules\Module {
 
     // Module name
     protected static $module = 'admin';
 
 
     /**
-     * @param Pimple $c
+     * @param \Pimple $c
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         // Fill in the blanks
         $this->obj = $c['obj'];
@@ -38,17 +43,17 @@ class User extends Module {
 
         if (@$this->r->bool['edit_mode'] !== true && !$GLOBALS['CONFIG']['REGISTRATIONS'] && !$this->acl('w')) {
             // Permission error, registrations are disabled
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         if (@$this->r->bool['edit_mode'] !== true && isset($_SESSION['users_id']) && !$this->acl('w')) {
             // Permission error, not allowed to create new users
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         if (@$this->r->bool['edit_mode'] === true && @$_SESSION['users_id'] != $this->tpl->getTemplateVars('id') && !$this->acl('w')) {
             // Permission error, not allowed to edit others
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         // --------------------------------------------------------------------
@@ -86,17 +91,17 @@ class User extends Module {
                 $tmp['users_id'] = $this->_CLEAN['id'];
                 $tmp['how_they_heard_about_us'] = $how_they_heard_about_us;
 
-                $cookie = SifuMarketing::getMarketingCookie();
+                $cookie = \Sifu\Marketing::getMarketingCookie();
                 if ($cookie) {
                     $tmp = array_merge($tmp, $cookie);
                 }
 
-                SifuFunct::shampoo($tmp, array(
+                Funct::shampoo($tmp, array(
                     'id', 'users_id', 'referrer', 'referral_id', 'landing_page',
                     'search_keywords', 'how_they_heard_about_us'
                     ));
 
-                $marketing = new SifuMarketing();
+                $marketing = new \Sifu\Marketing();
                 $marketing->save(null, $tmp);
             }
 
@@ -124,7 +129,7 @@ class User extends Module {
 
         // Other variables
         $this->tpl->assign($_POST);
-        if (empty($this->r->text['form_url'])) $this->r->text['form_url'] = SifuFunct::makeUrl($this->module_url . '/new');
+        if (empty($this->r->text['form_url'])) $this->r->text['form_url'] = Funct::makeUrl($this->module_url . '/new');
 
         // Display
         $this->tpl->display("edit_{$this->template_name}.tpl");
@@ -140,8 +145,8 @@ class User extends Module {
 
         $form = $this->obj->get($id, true); // Full profile
 
-        if (!$form) SifuFunct::redirect(SifuFunct::makeUrl($this->module_url . '/new'));
-        else $this->r->text['form_url'] = SifuFunct::makeUrl($this->module_url . "/edit/$id");
+        if (!$form) Funct::redirect(Funct::makeUrl($this->module_url . '/new'));
+        else $this->r->text['form_url'] = Funct::makeUrl($this->module_url . "/edit/$id");
 
         array_walk_recursive($form, create_function('&$val', '$val = htmlspecialchars($val, ENT_QUOTES, "UTF-8", false);')); // Sanitize
 
@@ -179,11 +184,11 @@ class User extends Module {
 
         if (!$this->acl('r')) {
             // Permission error, not allowed to export
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         $user = $this->obj;
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = 'SELECT ';
         if ($db->driver == 'mysql') $q .= 'SQL_CALC_FOUND_ROWS ';

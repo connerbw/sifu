@@ -5,7 +5,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-interface ISifuDb {
+namespace Sifu\Db;
+
+interface iDb {
 
     /**
     * @return array

@@ -39,7 +39,7 @@ $id = _GET('id');
 $result = true;
 
 try {
-    $res = SifuFunct::exists('access_groups', 'name', $name);
+    $res = \Sifu\Funct::exists('access_groups', 'name', $name);
 }
 catch (PDOException $e) {
     failure('Database error');
@@ -47,12 +47,12 @@ catch (PDOException $e) {
 
 if ($res && $res != $id) {
     // No duplicates allowed
-    $gtext = SifuFunct::getGtext('admin');
+    $gtext = \Sifu\Funct::getGtext('admin');
     $result = !empty($gtext['ajax_error_1']) ? $gtext['ajax_error_1'] : 'ajax_error_1';
 }
 elseif (strtolower($name) == 'root' || strtolower($name) == 'banned') {
     // Reserved keywords
-    $gtext = SifuFunct::getGtext('admin');
+    $gtext = \Sifu\Funct::getGtext('admin');
     $result = !empty($gtext['ajax_error_2']) ? $gtext['ajax_error_2'] : 'ajax_error_2';
 }
 

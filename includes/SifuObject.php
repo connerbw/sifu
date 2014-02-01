@@ -5,7 +5,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-abstract class SifuObject {
+namespace Sifu;
+
+abstract class Object {
 
     /**
     * A SifuObject must declare associated database tables as public
@@ -24,7 +26,7 @@ abstract class SifuObject {
 
         // Pre-condition sanity check
         if (empty($this->db_table))
-            throw new Exception('$this->db_table not set');
+            throw new \Exception('$this->db_table not set');
     }
 
 
@@ -40,7 +42,7 @@ abstract class SifuObject {
     */
     function dump($limit = null, $start = 0, $order = 'id', $way = 'ASC', $fast_paging = false) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = 'SELECT ';
         if ($fast_paging && $db->driver == 'mysql') $q .= 'SQL_CALC_FOUND_ROWS ';
@@ -55,7 +57,7 @@ abstract class SifuObject {
         elseif ($limit) $q .= "LIMIT $limit ";
 
         $st = $db->pdo->query($q);
-        return $st->fetchAll(PDO::FETCH_ASSOC);
+        return $st->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 
@@ -72,7 +74,7 @@ abstract class SifuObject {
     */
     function pump($where, $limit = null, $start = 0, $order = 'id', $way = 'ASC', $fast_paging = false) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         $q = 'SELECT ';
         if ($fast_paging && $db->driver == 'mysql') $q .= 'SQL_CALC_FOUND_ROWS ';
@@ -87,7 +89,7 @@ abstract class SifuObject {
         elseif ($limit) $q .= "LIMIT $limit ";
 
         $st = $db->pdo->query($q);
-        return $st->fetchAll(PDO::FETCH_ASSOC);
+        return $st->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 
@@ -99,11 +101,11 @@ abstract class SifuObject {
     */
     function get($id) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $st = $db->pdo->prepare("SELECT * FROM {$this->db_table} WHERE id = ? ");
         $db->autoBind($st, array(1 => $id));
         $st->execute();
-        $item = $st->fetch(PDO::FETCH_ASSOC);
+        $item = $st->fetch(\PDO::FETCH_ASSOC);
 
         if (!$item) return false;
         else return $item;
@@ -125,14 +127,14 @@ abstract class SifuObject {
 
         unset($item['id']); // Don't allow spoofing of the id in the array
 
-        if ($id != null && $id < 1) throw new Exception('Invalid id');
+        if ($id != null && $id < 1) throw new \Exception('Invalid id');
 
         // --------------------------------------------------------------------
         // Go!
         // --------------------------------------------------------------------
 
         // Begin transaction
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $tid = $db->requestTransaction();
 
         if ($id) {
@@ -184,7 +186,7 @@ abstract class SifuObject {
     function delete($id) {
 
         // Begin transaction
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
         $tid = $db->requestTransaction();
 
         // Delete from main table
@@ -232,7 +234,7 @@ abstract class SifuObject {
     */
     function count($where = null, $fast_paging = false) {
 
-        $db = SifuDbInit::get();
+        $db = DbInit::get();
 
         if ($fast_paging && $db->driver == 'mysql') {
 

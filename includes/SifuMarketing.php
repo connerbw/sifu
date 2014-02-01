@@ -5,7 +5,9 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class SifuMarketing extends SifuObject {
+namespace Sifu;
+
+class Marketing extends \Sifu\Object {
 
     // variables: table names
     public $db_table = 'users_marketing';
@@ -27,7 +29,7 @@ class SifuMarketing extends SifuObject {
     function save($id, array $item) {
 
         // Double check for stupidity
-        if (!$id && empty($item['users_id'])) throw new Exception('Invalid users_id');
+        if (!$id && empty($item['users_id'])) throw new \Exception('Invalid users_id');
         if (!$id && empty($item['signup_date'])) $item['signup_date'] = date('Y-m-d');
 
         // Let the parent do the rest

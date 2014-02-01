@@ -7,8 +7,8 @@
 
 function sifu($action, $params = null) {
 
-    $c = new Pimple();
-    $c['user'] = function() { return new SifuUser(); };
+    $c = new \Pimple();
+    $c['user'] = function() { return new \Sifu\User(); };
 
     if ('user' == $action) {
 
@@ -16,10 +16,10 @@ function sifu($action, $params = null) {
         // User
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new SifuTemplate(User::getModuleName()); };
-        $c['renderer'] = function() { return new AdminRenderer(User::getModuleName()); };
-        $c['obj'] = function() { return new SifuUser(); };
-        $obj = new User($c);
+        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\User::getModuleName()); };
+        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\User::getModuleName()); };
+        $c['obj'] = function() { return new \Sifu\User(); };
+        $obj = new \Sifu\Modules\Admin\User($c);
 
         if (!empty($_POST)) {
 
@@ -45,7 +45,7 @@ function sifu($action, $params = null) {
                 'timezone',
                 'url',
                 );
-            SifuFunct::shampoo($_POST, $keys);
+            \Sifu\Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('nickname')) $error = 'nickname';
@@ -58,15 +58,15 @@ function sifu($action, $params = null) {
             if (_POST('url') && filter_var(_POST('url'), FILTER_VALIDATE_URL) === false) $error = 'url';
             if (_POST('dob') && !preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", _POST('dob'))) $error = 'dob'; // YYYY-MM-DD
             // No dupes
-            $res = SifuFunct::exists('users', 'nickname', _POST('nickname'));
+            $res = \Sifu\Funct::exists('users', 'nickname', _POST('nickname'));
             if ($res && $res != _POST('id')) $error = 'nickname';
-            $res = SifuFunct::exists('users', 'nickname', _POST('email'));
+            $res = \Sifu\Funct::exists('users', 'nickname', _POST('email'));
             if ($res && $res != _POST('id')) $error = 'email';
 
             if ($error) {
                 // Write error to console
-                $obj->js_console .= SifuLog::jsConsole('Error: ', $error);
-                $obj->js_console .= SifuLog::jsConsole('$_POST: ', $_POST);
+                $obj->js_console .= \Sifu\Log::jsConsole('Error: ', $error);
+                $obj->js_console .= \Sifu\Log::jsConsole('$_POST: ', $_POST);
                 // Set form error
                 $obj->setFormError(true);
             }
@@ -76,7 +76,7 @@ function sifu($action, $params = null) {
         // No export
         if (isset($params[0]) && $params[0] == 'export') {
 
-            SifuFunct::redirect(SifuFunct::getPreviousURL());
+            \Sifu\Funct::redirect(\Sifu\Funct::getPreviousURL());
         }
         $obj->flow($params, '/admin/user');
 
@@ -87,10 +87,10 @@ function sifu($action, $params = null) {
         // Permissions
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new SifuTemplate(Permissions::getModuleName()); };
-        $c['renderer'] = function() { return new AdminRenderer(Permissions::getModuleName()); };
-        $c['obj'] = function() { return new SifuAccess(); };
-        $obj = new Permissions($c);
+        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Permissions::getModuleName()); };
+        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\Permissions::getModuleName()); };
+        $c['obj'] = function() { return new \Sifu\Access(); };
+        $obj = new \Sifu\Modules\Admin\Permissions($c);
 
         if (!empty($_POST)) {
 
@@ -102,7 +102,7 @@ function sifu($action, $params = null) {
                 'module',
                 'users_id',
                 );
-            SifuFunct::shampoo($_POST, $keys);
+            \Sifu\Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('module')) $error = 'module';
@@ -114,8 +114,8 @@ function sifu($action, $params = null) {
 
             if ($error) {
                 // Write error to console
-                $obj->js_console .= SifuLog::jsConsole('Error: ', $error);
-                $obj->js_console .= SifuLog::jsConsole('$_POST: ', $_POST);
+                $obj->js_console .= \Sifu\Log::jsConsole('Error: ', $error);
+                $obj->js_console .= \Sifu\Log::jsConsole('$_POST: ', $_POST);
                 // Set form error
                 $obj->setFormError(true);
             }
@@ -125,7 +125,7 @@ function sifu($action, $params = null) {
         // No print, no export
         if (isset($params[0]) && $params[0] == 'imprint' || $params[0] == 'export') {
 
-            SifuFunct::redirect(SifuFunct::getPreviousURL());
+            \Sifu\Funct::redirect(\Sifu\Funct::getPreviousURL());
         }
         $obj->flow($params, '/admin/permissions');
 
@@ -136,9 +136,9 @@ function sifu($action, $params = null) {
         // Groups
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new SifuTemplate(Group::getModuleName()); };
-        $c['renderer'] = function() { return new AdminRenderer(Group::getModuleName()); };
-        $obj = new Group($c);
+        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Group::getModuleName()); };
+        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\Group::getModuleName()); };
+        $obj = new \Sifu\Modules\Admin\Group($c);
 
         if (!empty($_POST)) {
 
@@ -147,20 +147,20 @@ function sifu($action, $params = null) {
                 'id',
                 'name',
                 );
-            SifuFunct::shampoo($_POST, $keys);
+            \Sifu\Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('name')) $error = 'name';
             // Optional
             if (_POST('id') && filter_var(_POST('id'), FILTER_VALIDATE_INT) === false) $error = 'id';
             // No dupes
-            $res = SifuFunct::exists('access_groups', 'name', _POST('name'));
+            $res = \Sifu\Funct::exists('access_groups', 'name', _POST('name'));
             if ($res && $res != _POST('id')) $error = 'name';
 
             if ($error) {
                 // Write error to console
-                $obj->js_console .= SifuLog::jsConsole('Error: ', $error);
-                $obj->js_console .= SifuLog::jsConsole('$_POST: ', $_POST);
+                $obj->js_console .= \Sifu\Log::jsConsole('Error: ', $error);
+                $obj->js_console .= \Sifu\Log::jsConsole('$_POST: ', $_POST);
                 // Set form error
                 $obj->setFormError(true);
             }
@@ -170,7 +170,7 @@ function sifu($action, $params = null) {
         // No print, no export
         if (isset($params[0]) && $params[0] == 'imprint' || $params[0] == 'export') {
 
-            SifuFunct::redirect(SifuFunct::getPreviousURL());
+            \Sifu\Funct::redirect(\Sifu\Funct::getPreviousURL());
         }
         $obj->flow($params, '/admin/permissions');
 
@@ -181,9 +181,9 @@ function sifu($action, $params = null) {
         // Marketing
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new SifuTemplate(Marketing::getModuleName()); };
-        $c['renderer'] = function() { return new SifuRenderer(Marketing::getModuleName()); };
-        $obj = new Marketing($c);
+        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Marketing::getModuleName()); };
+        $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\Admin\Marketing::getModuleName()); };
+        $obj = new \Sifu\Modules\Admin\Marketing($c);
 
         switch (isset($params[0]) ? $params[0] : 'default') {
 
@@ -210,7 +210,7 @@ function sifu($action, $params = null) {
 
         default:
 
-            SifuFunct::redirect(SifuFunct::makeUrl('/admin'));
+            \Sifu\Funct::redirect(\Sifu\Funct::makeUrl('/admin'));
         }
     }
     else {
@@ -219,9 +219,9 @@ function sifu($action, $params = null) {
         //  Default
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new SifuTemplate(Admin::getModuleName()); };
-        $c['renderer'] = function() { return new AdminRenderer(Admin::getModuleName()); };
-        $obj = new Admin($c);
+        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Admin::getModuleName()); };
+        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\Admin::getModuleName()); };
+        $obj = new \Sifu\Modules\Admin\Admin($c);
 
         $obj->fallback();
     }

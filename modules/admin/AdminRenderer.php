@@ -5,7 +5,12 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-class AdminRenderer extends SifuRenderer {
+namespace Sifu\Modules\Admin;
+
+use Sifu\User as User;
+use Sifu\Access as Access;
+
+class AdminRenderer extends \Sifu\Renderer {
 
     /**
     * @param string $module
@@ -58,7 +63,7 @@ class AdminRenderer extends SifuRenderer {
 
         // Procedure
         $arr[-1] = '---';
-        $user = new SifuUser();
+        $user = new User();
         $res = $user->dump(null, 0, 'nickname');
         foreach ($res as $val) {
             $arr[$val['id']] = $val['nickname'];
@@ -81,7 +86,7 @@ class AdminRenderer extends SifuRenderer {
 
         // Procedure
         $arr[null] = '---';
-        $access = new SifuAccess();
+        $access = new Access();
         $res = $access->dumpGroups(null, 0, 'name');
         foreach ($res as $val) {
             $arr[$val['id']] = $val['name'];
@@ -102,7 +107,7 @@ class AdminRenderer extends SifuRenderer {
         static $arr = null;
         if (is_array($arr)) return $arr;
 
-        $tzid = DateTimeZone::listIdentifiers();
+        $tzid = \DateTimeZone::listIdentifiers();
         $continent = null;
         $optgroup = null;
 
@@ -122,8 +127,4 @@ class AdminRenderer extends SifuRenderer {
         return $arr;
     }
 
-
-
 }
-
-?>

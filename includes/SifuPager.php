@@ -5,6 +5,8 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
+namespace Sifu;
+
 /**
 * Pseudo example:
 *
@@ -30,7 +32,7 @@
 *   echo $pager->pagesHtml('http://some.url/');
 *   </code>
 */
-class SifuPager {
+class Pager {
 
     protected $range = 10;
     protected $limit = 50;

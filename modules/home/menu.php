@@ -14,15 +14,15 @@ function home_menu() {
         return null;
     }
 
-    if (SifuFunct::acl('r', 'home')) {
+    if (\Sifu\Funct::acl('r', 'home')) {
         // Read permissions OK, return menu
-        $gtext = SifuFunct::getGtext();
+        $gtext = \Sifu\Funct::getGtext();
         return array(
             $gtext['home'] => array(
-                SifuFunct::makeUrl('/home'),
+                \Sifu\Funct::makeUrl('/home'),
                 array(
                     'Hello' => 'http://www.trotch.com/',
-                    'World' => SifuFunct::makeUrl('#'),
+                    'World' => \Sifu\Funct::makeUrl('#'),
                     ),
                 ),
             );

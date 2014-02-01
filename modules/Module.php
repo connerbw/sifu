@@ -1,9 +1,18 @@
 <?php
 
 /**
-* @author     Dac Chartrand <dac.chartrand@gmail.com>
-* @license    http://www.gnu.org/licenses/lgpl-2.1.txt
-*/
+ * @author     Dac Chartrand <dac.chartrand@gmail.com>
+ * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
+ */
+
+namespace Sifu\Modules;
+
+use Sifu\Renderer as Renderer;
+use Sifu\Object as Object;
+use Sifu\Funct as Funct;
+use Sifu\Pager as Pager;
+use Sifu\DbInit as DbInit;
+
 abstract class Module {
 
     // ------------------------------------------------------------------------
@@ -29,18 +38,17 @@ abstract class Module {
     public $r;
 
     /**
-    * @var SifuTemplate
+    * @var \Sifu\Template
     */
     public $tpl;
 
     /**
-    * @var SifuObject
+    * @var \Sifu\Object
     */
     protected $obj;
 
     /**
-    * SifuUser()
-    * @var object
+    * @var \Sifu\User
     */
     protected $user;
 
@@ -92,15 +100,15 @@ abstract class Module {
 
 
     /**
-     * @param Pimple $c
-     * @throws Exception
+     * @param \Pimple $c
+     * @throws \Exception
      */
-    function __construct(Pimple $c) {
+    function __construct(\Pimple $c) {
 
         // Pre-condition sanity check
-        if (empty(static::$module)) throw new Exception('static::$module not set');
-        if (!($this->r instanceof SifuRenderer)) throw new Exception('$this->r is not an instance of SifuRenderer()');
-        if (isset($this->obj) && !($this->obj instanceof SifuObject)) throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (empty(static::$module)) throw new \Exception('static::$module not set');
+        if (!($this->r instanceof Renderer)) throw new \Exception('$this->r is not an instance of \Sifu\Renderer()');
+        if (isset($this->obj) && !($this->obj instanceof Object)) throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         // Template
         $this->tpl = $c['template']; // Template
@@ -125,7 +133,7 @@ abstract class Module {
     */
     function acl($val) {
 
-        return SifuFunct::acl($val, static::$module);
+        return Funct::acl($val, static::$module);
     }
 
 
@@ -164,7 +172,7 @@ abstract class Module {
     function flow($params, $redirect = null) {
 
         $do = @$params[0];
-        if (empty($redirect)) $redirect = SifuFunct::getPreviousURL();
+        if (empty($redirect)) $redirect = Funct::getPreviousURL();
 
         if ($do == 'new') {
 
@@ -177,7 +185,7 @@ abstract class Module {
             // Duplicate, edit, imprint, delete
             if (empty($params[1]) || filter_var($params[1], FILTER_VALIDATE_INT) === false) {
 
-                SifuFunct::redirect(SifuFunct::makeUrl($redirect));
+                Funct::redirect(Funct::makeUrl($redirect));
             }
 
             $this->$do($params[1]);
@@ -199,7 +207,7 @@ abstract class Module {
         else {
 
             // Error, Redirect
-            SifuFunct::redirect(SifuFunct::getPreviousURL());
+            Funct::redirect(Funct::getPreviousURL());
         }
     }
 
@@ -208,18 +216,18 @@ abstract class Module {
     */
     function form() {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         if (empty($this->module_url))
-            throw new Exception('$this->module_url is not set');
+            throw new \Exception('$this->module_url is not set');
 
         if (empty($this->template_name))
-            throw new Exception('$this->template_name is not set');
+            throw new \Exception('$this->template_name is not set');
 
         if (!$this->acl('w')) {
             // Permission error, not allowed to edit
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         // --------------------------------------------------------------------
@@ -255,7 +263,7 @@ abstract class Module {
 
         // Other variables
         $this->tpl->assign($_POST);
-        if (empty($this->r->text['form_url'])) $this->r->text['form_url'] = SifuFunct::makeUrl($this->module_url . '/new');
+        if (empty($this->r->text['form_url'])) $this->r->text['form_url'] = Funct::makeUrl($this->module_url . '/new');
 
         // Display
         $this->tpl->display("edit_{$this->template_name}.tpl");
@@ -264,12 +272,12 @@ abstract class Module {
 
     /**
     * @param int $id
-    * @throws Exception
+    * @throws \Exception
     */
     function duplicate($id) {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         $form = $this->obj->get($id);
 
@@ -285,17 +293,17 @@ abstract class Module {
 
     /**
     * @param int $id
-    * @throws Exception
+    * @throws \Exception
     */
     function edit($id) {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         $form = $this->obj->get($id);
 
-        if (!$form) SifuFunct::redirect(SifuFunct::makeUrl($this->module_url . '/new'));
-        else $this->r->text['form_url'] = SifuFunct::makeUrl($this->module_url . "/edit/$id");
+        if (!$form) Funct::redirect(Funct::makeUrl($this->module_url . '/new'));
+        else $this->r->text['form_url'] = Funct::makeUrl($this->module_url . "/edit/$id");
 
         array_walk_recursive($form, create_function('&$val', '$val = htmlspecialchars($val, ENT_QUOTES, "UTF-8", false);')); // Sanitize
 
@@ -307,19 +315,19 @@ abstract class Module {
 
     /**
     * @param int $id
-    * @throws Exception
+    * @throws \Exception
     */
     function imprint($id) {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         if (empty($this->template_name))
-            throw new Exception('$this->template_name is not set');
+            throw new \Exception('$this->template_name is not set');
 
         if (!$this->acl('r')) {
             // Permission error, not allowed to print
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         // --------------------------------------------------------------------
@@ -327,7 +335,7 @@ abstract class Module {
         // --------------------------------------------------------------------
 
         $form = $this->obj->get($id);
-        if (!$form) SifuFunct::redirect(SifuFunct::makeUrl($this->module_url));
+        if (!$form) Funct::redirect(Funct::makeUrl($this->module_url));
 
         array_walk_recursive($form, create_function('&$val', '$val = htmlspecialchars($val, ENT_QUOTES, "UTF-8", false);')); // Sanitize
 
@@ -338,51 +346,51 @@ abstract class Module {
 
     /**
     * @param int $id
-    * @throws Exception
+    * @throws \Exception
     */
     function delete($id) {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         if (!$this->acl('x')) {
             // Permission error, not allowed to delete
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
-        $form = $this->obj->delete($id);
+        $this->obj->delete($id);
         $this->success();
     }
 
 
     /**
     * @param string $q [optional] custom SQL query
-    * @throws Exception
+    * @throws \Exception
     */
     function listing($q = null) {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         if (empty($this->module_url))
-            throw new Exception('$this->module_url is not set');
+            throw new \Exception('$this->module_url is not set');
 
         if (empty($this->template_name))
-            throw new Exception('$this->template_name is not set');
+            throw new \Exception('$this->template_name is not set');
 
 
         // --------------------------------------------------------------------
         // Procedure
         // --------------------------------------------------------------------
 
-        $pager = new SifuPager();
+        $pager = new Pager();
 
         if ($q) {
 
             $q .= ' LIMIT ' . $pager->getLimit() . ' OFFSET ' . $pager->getStart() . ' ';
-            $db = SifuDbInit::get();
+            $db = DbInit::get();
             $st = $db->pdo->query($q);
-            $res = $st->fetchAll(PDO::FETCH_ASSOC);
+            $res = $st->fetchAll(\PDO::FETCH_ASSOC);
         }
         else {
 
@@ -394,7 +402,7 @@ abstract class Module {
         array_walk_recursive($res, create_function('&$val', '$val = htmlspecialchars($val, ENT_QUOTES, "UTF-8", false);')); // Sanitize
 
         $this->r->arr['list'] = $res;
-        $this->r->text['pager'] = $pager->pagesHtml(SifuFunct::makeUrl($this->module_url . '/list'));
+        $this->r->text['pager'] = $pager->pagesHtml(Funct::makeUrl($this->module_url . '/list'));
 
         $this->tpl->display("list_{$this->template_name}.tpl");
     }
@@ -404,19 +412,19 @@ abstract class Module {
     * Export CSV File
     *
     * @param string $q [optional] custom SQL query
-    * @throws Exception
+    * @throws \Exception
     */
     function export($q = null) {
 
-        if (!($this->obj instanceof SifuObject))
-            throw new Exception('$this->obj is not an instance of SifuObject()');
+        if (!($this->obj instanceof Object))
+            throw new \Exception('$this->obj is not an instance of \Sifu\Object()');
 
         if (empty($this->template_name))
-            throw new Exception('$this->template_name is not set');
+            throw new \Exception('$this->template_name is not set');
 
         if (!$this->acl('r')) {
             // Permission error, not allowed to export
-            SifuFunct::redirect(SifuFunct::makeUrl('/globals/permission_error'));
+            Funct::redirect(Funct::makeUrl('/globals/permission_error'));
         }
 
         // --------------------------------------------------------------------
@@ -425,9 +433,9 @@ abstract class Module {
 
         if ($q) {
 
-            $db = SifuDbInit::get();
+            $db = DbInit::get();
             $st = $db->pdo->query($q);
-            $res = $st->fetchAll(PDO::FETCH_ASSOC);
+            $res = $st->fetchAll(\PDO::FETCH_ASSOC);
         }
         else {
 
@@ -444,7 +452,7 @@ abstract class Module {
     */
     function success() {
 
-        SifuFunct::redirect(SifuFunct::makeUrl('/globals/success'));
+        Funct::redirect(Funct::makeUrl('/globals/success'));
     }
 
 
@@ -459,12 +467,12 @@ abstract class Module {
 
     /**
     * @param array $res PDO::FETCH_ASSOC
-    * @throws Exception
+    * @throws \Exception
     */
     protected function _exportCSV($res) {
 
         $output = fopen('php://output', 'w');
-        if (!$output) throw new Exception("Can't open php://output");
+        if (!$output) throw new \Exception("Can't open php://output");
 
         $filename = $this->template_name;
 
@@ -494,7 +502,7 @@ abstract class Module {
             }
         }
 
-        if (!fclose($output)) throw new Exception("Can't close php://output");
+        if (!fclose($output)) throw new \Exception("Can't close php://output");
     }
 
 }
