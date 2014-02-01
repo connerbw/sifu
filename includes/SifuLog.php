@@ -121,5 +121,3 @@ class Log {
         return $tmp;
     }
 }
-
-?>

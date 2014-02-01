@@ -7,10 +7,10 @@
 function sifu($action, $params = null)
 {
 
-    $c = new Pimple();
+    $c = new \Pimple();
     $c['user'] = function() { return new \Sifu\User(); };
-    $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\UserAuthenticate::getModuleName()); };
-    $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\UserAuthenticate::getModuleName()); };
+    $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\User\UserAuthenticate::getModuleName()); };
+    $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\User\UserAuthenticate::getModuleName()); };
 
     if ('authenticate' == $action) {
 
@@ -18,7 +18,7 @@ function sifu($action, $params = null)
         // Authenticate
         // ---------------------------------------------------------------------
 
-        $obj = new \Sifu\Modules\UserAuthenticate($c);
+        $obj = new \Sifu\Modules\User\UserAuthenticate($c);
 
         if (!empty($_POST)) {
 

@@ -50,15 +50,20 @@ function sifu_autoload($class_name) {
 spl_autoload_register('sifu_autoload');
 
 
+// -------------------------------------------------------------------------
+// $_GET & $_POST Helpers
+// -------------------------------------------------------------------------
+
 /**
  * Get $_GET var
  *
  * @param string $name
- * @return $_GET
+ * @param mixed $default (optional)
+ * @return mixed
  */
-function _GET($name) {
+function _GET($name, $default = null) {
 
-    return (isset($_GET[$name])) ? $_GET[$name] : null;
+    return (isset($_GET[$name])) ? $_GET[$name] : ($default ? $default : null);
 }
 
 
@@ -66,11 +71,12 @@ function _GET($name) {
  * Get $_POST var
  *
  * @param string $name
- * @return $_POST
+ * @param mixed $default (optional)
+ * @return mixed
  */
-function _POST($name) {
+function _POST($name, $default = null) {
 
-    return (isset($_POST[$name])) ? $_POST[$name] : null;
+    return (isset($_POST[$name])) ? $_POST[$name] : ($default ? $default : null);
 }
 
 
@@ -137,6 +143,7 @@ function insert_previousURL($params) {
 
     return \Sifu\Funct::getPreviousURL();
 }
+
 
 /**
  * Simple trim filter for Smarty templates

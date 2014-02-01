@@ -23,7 +23,6 @@ class Template extends \Smarty {
     * @global string $CONFIG['PATH']
     * @global string $CONFIG['PARTITION']
     * @param string $module
-    * @param string $partition
     */
     function __construct($module) {
 
@@ -57,13 +56,14 @@ class Template extends \Smarty {
 
 
     /**
-    * Set the template for a module
-    *
-    * @global string $CONFIG['PATH']
-    * @global string $CONFIG['CACHE_LIFETIME']
-    * @param string $module
-    * @param string $partition
-    */
+     * Set the template for a module
+     *
+     * @global string $CONFIG ['PATH']
+     * @global string $CONFIG ['CACHE_LIFETIME']
+     * @param string $module
+     * @param string $partition
+     * @throws \Exception
+     */
     function setModule($module, $partition = 'sifu') {
 
         // --------------------------------------------------------------------

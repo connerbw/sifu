@@ -76,7 +76,7 @@ class DbInit {
                     $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                     require_once($file);
                     self::$db[$key] = new $driver($pdo);
-                    if (!(self::$db[$key] instanceof \Sifu\Db\iDb)) throw new \Exception($driver . '() does not implement ISifuDb interface');
+                    if (!(self::$db[$key] instanceof \Sifu\Db\iDb)) throw new \Exception($driver . '() does not implement \Sifu\Db\iDb interface');
                 }
             }
             catch (\Exception $e) {
@@ -110,5 +110,3 @@ class DbInit {
     }
 
 }
-
-?>

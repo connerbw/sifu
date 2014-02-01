@@ -24,7 +24,7 @@ header('Content-Type: text/plain');
 
 if ($debug) echo "> \$debug = true, nothing will be deleted.\n  Edit the code in the header of this file if you want to change this. \n\n";
 
-$db = SifuDbInit::get();
+$db = \Sifu\DbInit::get();
 
 // Scan for missing links, push them in $not_found array
 $link_tables = $db->getLinkTables();
@@ -87,8 +87,6 @@ try
 }
 catch (Exception $e) {
 
-    SifuDbInit::abort(); // Abort and rollback transactions
+    \Sifu\DbInit::abort(); // Abort and rollback transactions
     throw($e); // Hot potato!
 }
-
-?>

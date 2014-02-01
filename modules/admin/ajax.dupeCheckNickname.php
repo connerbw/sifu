@@ -54,4 +54,3 @@ if ($res && $res != $id) {
 header('Content-Type: application/json');
 echo json_encode($result);
 
-?>

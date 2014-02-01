@@ -113,12 +113,13 @@ abstract class Object {
 
 
     /**
-    * Save
-    *
-    * @param int|null $id
-    * @param array $item keys match SQL table columns
-    * @return int id
-    */
+     * Save
+     *
+     * @param int|null $id
+     * @param array $item keys match SQL table columns
+     * @return int id
+     * @throws \Exception
+     */
     function save($id, array $item) {
 
         // --------------------------------------------------------------------
@@ -251,5 +252,3 @@ abstract class Object {
     }
 
 }
-
-?>

@@ -14,11 +14,9 @@ $cache[] = realpath(dirname(__FILE__) . '/../temporary/templates_c/');
 
 // Go!
 foreach($cache as $dir) {
-    SifuFunct::obliterateDir($dir);
+    \Sifu\Funct::obliterateDir($dir);
 }
 
 header('Content-Type: text/plain');
 
-echo 'Caches purged!'
-
-?>
+echo 'Caches purged!';

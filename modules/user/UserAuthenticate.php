@@ -5,11 +5,11 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
-namespace \Sifu\Modules\User;
+namespace Sifu\Modules\User;
 
 use Sifu\Funct as Funct;
 
-class UserAuthenticate extends Module {
+class UserAuthenticate extends \Sifu\Modules\Module {
 
     // Module name
     protected static $module = 'user';

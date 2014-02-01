@@ -32,5 +32,3 @@ interface iDb {
     */
     function tablesWithColumns($col);
 }
-
-?>

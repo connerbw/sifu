@@ -235,7 +235,7 @@ class Pager {
         if (trim($url) == '') return null;
 
         $start = $this->start;
-        $gtext = SifuFunct::getGtext();
+        $gtext = Funct::getGtext();
 
         // W3C valid url
         $q = mb_strpos($url, '?') ? '&' : '?';
@@ -247,5 +247,3 @@ class Pager {
     }
 
 }
-
-?>

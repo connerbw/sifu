@@ -322,5 +322,3 @@ $gtext['countries_arr'] = array(
     'zm' => 'Zambie',
     'zw' => 'Zimbabwe',
     );
-
-?>

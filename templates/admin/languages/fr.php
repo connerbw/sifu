@@ -50,5 +50,3 @@ $gtext['user'] = 'Utilisateur';
 $gtext['users'] = 'Utilisateurs';
 $gtext['verify_password']  = 'Vérifiez le mot de passe';
 $gtext['write'] = 'Écriture';
-
-?>

@@ -62,5 +62,3 @@ elseif (strtolower($name) == 'root' || strtolower($name) == 'banned') {
 
 header('Content-Type: application/json');
 echo json_encode($result);
-
-?>
