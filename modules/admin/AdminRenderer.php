@@ -7,7 +7,6 @@
 
 namespace Sifu\Modules\Admin;
 
-use Sifu\User as User;
 use Sifu\Access as Access;
 
 class AdminRenderer extends \Sifu\Renderer {
@@ -63,7 +62,7 @@ class AdminRenderer extends \Sifu\Renderer {
 
         // Procedure
         $arr[-1] = '---';
-        $user = new User();
+        $user = new \Sifu\User();
         $res = $user->dump(null, 0, 'nickname');
         foreach ($res as $val) {
             $arr[$val['id']] = $val['nickname'];

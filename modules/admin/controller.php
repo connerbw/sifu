@@ -5,6 +5,10 @@
 * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
 */
 
+namespace Sifu\Modules\Admin;
+
+use Sifu\Funct as Funct;
+
 function sifu($action, $params = null) {
 
     $c = new \Pimple();
@@ -16,10 +20,10 @@ function sifu($action, $params = null) {
         // User
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\User::getModuleName()); };
-        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\User::getModuleName()); };
+        $c['template'] = function() { return new \Sifu\Template(User::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(User::getModuleName()); };
         $c['obj'] = function() { return new \Sifu\User(); };
-        $obj = new \Sifu\Modules\Admin\User($c);
+        $obj = new User($c);
 
         if (!empty($_POST)) {
 
@@ -45,7 +49,7 @@ function sifu($action, $params = null) {
                 'timezone',
                 'url',
                 );
-            \Sifu\Funct::shampoo($_POST, $keys);
+            Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('nickname')) $error = 'nickname';
@@ -58,9 +62,9 @@ function sifu($action, $params = null) {
             if (_POST('url') && filter_var(_POST('url'), FILTER_VALIDATE_URL) === false) $error = 'url';
             if (_POST('dob') && !preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", _POST('dob'))) $error = 'dob'; // YYYY-MM-DD
             // No dupes
-            $res = \Sifu\Funct::exists('users', 'nickname', _POST('nickname'));
+            $res = Funct::exists('users', 'nickname', _POST('nickname'));
             if ($res && $res != _POST('id')) $error = 'nickname';
-            $res = \Sifu\Funct::exists('users', 'nickname', _POST('email'));
+            $res = Funct::exists('users', 'nickname', _POST('email'));
             if ($res && $res != _POST('id')) $error = 'email';
 
             if ($error) {
@@ -76,7 +80,7 @@ function sifu($action, $params = null) {
         // No export
         if (isset($params[0]) && $params[0] == 'export') {
 
-            \Sifu\Funct::redirect(\Sifu\Funct::getPreviousURL());
+            Funct::redirect(Funct::getPreviousURL());
         }
         $obj->flow($params, '/admin/user');
 
@@ -87,10 +91,10 @@ function sifu($action, $params = null) {
         // Permissions
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Permissions::getModuleName()); };
-        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\Permissions::getModuleName()); };
+        $c['template'] = function() { return new \Sifu\Template(Permissions::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(Permissions::getModuleName()); };
         $c['obj'] = function() { return new \Sifu\Access(); };
-        $obj = new \Sifu\Modules\Admin\Permissions($c);
+        $obj = new Permissions($c);
 
         if (!empty($_POST)) {
 
@@ -102,7 +106,7 @@ function sifu($action, $params = null) {
                 'module',
                 'users_id',
                 );
-            \Sifu\Funct::shampoo($_POST, $keys);
+            Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('module')) $error = 'module';
@@ -125,7 +129,7 @@ function sifu($action, $params = null) {
         // No print, no export
         if (isset($params[0]) && $params[0] == 'imprint' || $params[0] == 'export') {
 
-            \Sifu\Funct::redirect(\Sifu\Funct::getPreviousURL());
+            Funct::redirect(Funct::getPreviousURL());
         }
         $obj->flow($params, '/admin/permissions');
 
@@ -136,9 +140,9 @@ function sifu($action, $params = null) {
         // Groups
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Group::getModuleName()); };
-        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\Group::getModuleName()); };
-        $obj = new \Sifu\Modules\Admin\Group($c);
+        $c['template'] = function() { return new \Sifu\Template(Group::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(Group::getModuleName()); };
+        $obj = new Group($c);
 
         if (!empty($_POST)) {
 
@@ -147,14 +151,14 @@ function sifu($action, $params = null) {
                 'id',
                 'name',
                 );
-            \Sifu\Funct::shampoo($_POST, $keys);
+            Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('name')) $error = 'name';
             // Optional
             if (_POST('id') && filter_var(_POST('id'), FILTER_VALIDATE_INT) === false) $error = 'id';
             // No dupes
-            $res = \Sifu\Funct::exists('access_groups', 'name', _POST('name'));
+            $res = Funct::exists('access_groups', 'name', _POST('name'));
             if ($res && $res != _POST('id')) $error = 'name';
 
             if ($error) {
@@ -170,7 +174,7 @@ function sifu($action, $params = null) {
         // No print, no export
         if (isset($params[0]) && $params[0] == 'imprint' || $params[0] == 'export') {
 
-            \Sifu\Funct::redirect(\Sifu\Funct::getPreviousURL());
+            Funct::redirect(Funct::getPreviousURL());
         }
         $obj->flow($params, '/admin/permissions');
 
@@ -181,9 +185,9 @@ function sifu($action, $params = null) {
         // Marketing
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Marketing::getModuleName()); };
-        $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\Admin\Marketing::getModuleName()); };
-        $obj = new \Sifu\Modules\Admin\Marketing($c);
+        $c['template'] = function() { return new \Sifu\Template(Marketing::getModuleName()); };
+        $c['renderer'] = function() { return new \Sifu\Renderer(Marketing::getModuleName()); };
+        $obj = new Marketing($c);
 
         switch (isset($params[0]) ? $params[0] : 'default') {
 
@@ -210,7 +214,7 @@ function sifu($action, $params = null) {
 
         default:
 
-            \Sifu\Funct::redirect(\Sifu\Funct::makeUrl('/admin'));
+            Funct::redirect(Funct::makeUrl('/admin'));
         }
     }
     else {
@@ -219,9 +223,9 @@ function sifu($action, $params = null) {
         //  Default
         // ---------------------------------------------------------------------
 
-        $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Admin\Admin::getModuleName()); };
-        $c['renderer'] = function() { return new \Sifu\Modules\Admin\AdminRenderer(\Sifu\Modules\Admin\Admin::getModuleName()); };
-        $obj = new \Sifu\Modules\Admin\Admin($c);
+        $c['template'] = function() { return new \Sifu\Template(Admin::getModuleName()); };
+        $c['renderer'] = function() { return new AdminRenderer(Admin::getModuleName()); };
+        $obj = new Admin($c);
 
         $obj->fallback();
     }

@@ -4,13 +4,18 @@
  * @author     Dac Chartrand <dac.chartrand@gmail.com>
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
  */
+
+namespace Sifu\Modules\User;
+
+use Sifu\Funct as Funct;
+
 function sifu($action, $params = null)
 {
 
     $c = new \Pimple();
     $c['user'] = function() { return new \Sifu\User(); };
-    $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\User\UserAuthenticate::getModuleName()); };
-    $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\User\UserAuthenticate::getModuleName()); };
+    $c['template'] = function() { return new \Sifu\Template(UserAuthenticate::getModuleName()); };
+    $c['renderer'] = function() { return new \Sifu\Renderer(UserAuthenticate::getModuleName()); };
 
     if ('authenticate' == $action) {
 
@@ -18,7 +23,7 @@ function sifu($action, $params = null)
         // Authenticate
         // ---------------------------------------------------------------------
 
-        $obj = new \Sifu\Modules\User\UserAuthenticate($c);
+        $obj = new UserAuthenticate($c);
 
         if (!empty($_POST)) {
 
@@ -27,7 +32,7 @@ function sifu($action, $params = null)
                 'nickname',
                 'password',
                 );
-            \Sifu\Funct::shampoo($_POST, $keys);
+            Funct::shampoo($_POST, $keys);
 
             // Required
             if (!_POST('nickname')) $error = 'nickname';
@@ -67,7 +72,7 @@ function sifu($action, $params = null)
 
             default:
 
-                \Sifu\Funct::redirect(\Sifu\Funct::makeUrl('/user'));
+                Funct::redirect(Funct::makeUrl('/user'));
         }
     }
     else {
@@ -76,6 +81,6 @@ function sifu($action, $params = null)
         // Default
         // ---------------------------------------------------------------------
 
-        \Sifu\Funct::redirect(\Sifu\Funct::makeUrl('/home'));
+        Funct::redirect(Funct::makeUrl('/home'));
     }
 }

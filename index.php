@@ -46,7 +46,7 @@ try {
         else {
             include_once($GLOBALS['CONFIG']['PATH'] . '/modules/globals/controller.php');
         }
-        sifu('banned');
+        \Sifu\Modules\Globals\sifu('banned');
         exit;
     }
     // 404 Not Found
@@ -60,7 +60,7 @@ try {
         else {
             include_once($GLOBALS['CONFIG']['PATH'] . '/modules/globals/controller.php');
         }
-        sifu('e404');
+        \Sifu\Modules\Globals\sifu('e404');
         exit;
     }
 
@@ -83,7 +83,8 @@ try {
     else {
         include_once($GLOBALS['CONFIG']['PATH'] . "/modules/{$controller}/controller.php");
     }
-    sifu($action, $params);
+    $c_funct = '\Sifu\Modules\\' . ucfirst($controller) . '\sifu';
+    $c_funct($action, $params);
 }
 catch (Exception $e) {
 
@@ -101,10 +102,6 @@ catch (Exception $e) {
     }
 
     try {
-        if (function_exists('sifu')) {
-            throw new Exception();
-        }
-
         $controller = 'globals';
         if (is_file($GLOBALS['CONFIG']['PATH'] . '/biz/modules/globals/controller.php')) {
             include_once($GLOBALS['CONFIG']['PATH'] . '/biz/modules/globals/controller.php');
@@ -112,7 +109,7 @@ catch (Exception $e) {
         else {
             include_once($GLOBALS['CONFIG']['PATH'] . '/modules/globals/controller.php');
         }
-        sifu('error', array(nl2br($message)));
+        \Sifu\Modules\Globals\sifu('error', array(nl2br($message)));
         die();
     }
     catch (Exception $garbage) {

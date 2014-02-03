@@ -5,14 +5,16 @@
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt
  */
 
+namespace Sifu\Modules\Globals;
+
 function sifu($action, $params = null)
 {
     $c = new \Pimple();
     $c['user'] = function() { return new \Sifu\User(); };
-    $c['template'] = function() { return new \Sifu\Template(\Sifu\Modules\Globals\Globals::getModuleName()); };
-    $c['renderer'] = function() { return new \Sifu\Renderer(\Sifu\Modules\Globals\Globals::getModuleName()); };
+    $c['template'] = function() { return new \Sifu\Template(Globals::getModuleName()); };
+    $c['renderer'] = function() { return new \Sifu\Renderer(Globals::getModuleName()); };
 
-    $g = new \Sifu\Modules\Globals\Globals($c);
+    $g = new Globals($c);
 
     switch ($action) {
 
