@@ -15,6 +15,11 @@ class User extends \Sifu\Modules\Module {
     // Module name
     protected static $module = 'admin';
 
+    /**
+     * @var \Sifu\User
+     */
+    protected $obj;
+
 
     /**
      * @param \Pimple $c

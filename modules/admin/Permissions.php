@@ -15,6 +15,11 @@ class Permissions extends \Sifu\Modules\Module {
     // Module name
     protected static $module = 'admin';
 
+    /**
+     * @var \Sifu\Access
+     */
+    protected $obj;
+
 
     /**
      * @param \Pimple $c
